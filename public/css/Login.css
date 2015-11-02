@@ -1,0 +1,19 @@
+﻿#Login{
+
+}
+
+#Login .navbar{
+
+}
+
+#Login .register-form{
+    background-color:#fff;
+    padding:5px;
+}
+
+#Login .login-form{
+    background-color:#fff;
+    padding:5px;
+    margin-top:100px;
+}
+
