@@ -17,9 +17,13 @@
     };
 
     //Event search
-    var searchEvent = function (title, callback) {
-        $http.jsonp("http://api.eventful.com/rest/events/search?...&keywords=books&location=San+Diego&date=Future")
-        .success(callback);
+    var searchEvent = function () {
+        $http.jsonp("http://api.eventful.com/json/events/search?id=k6C5qrCrdBgZMSkw&keywords=books&location=San+Diego&date=Future")
+        .success(function (resp) {
+
+            console.log(resp);
+
+        });
     }
     var events = [];
     var addToList = function (event) {
@@ -31,7 +35,7 @@
 
     //Return block
     return {
-        search: searchEvent,
+        searchEvent: searchEvent,
         addToList: addToList,
         getEvents: getEvents,
         initUserPosition: initUserPosition,
