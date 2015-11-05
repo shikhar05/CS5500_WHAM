@@ -18,7 +18,7 @@ app.factory("MyService", function ($http) {
 
     var getUserPosition = function () {
         return position;
-    }
+    };
 
     return {
         initUserPosition: initUserPosition,

@@ -17,26 +17,26 @@
                 <br />
 
                 <label>First Name</label>
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control" ng-model="register.first"/>
                 <br />
 
                 <label>Last Name</label>
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control" ng-model="register.last" />
                 <br />
 
                 <label>Email</label>
-                <input type="email" class="form-control" />
+                <input type="email" class="form-control" ng-model="register.email" />
                 <br />
 
                 <label>Password</label>
-                <input type="password" class="form-control" />
+                <input type="password" class="form-control" ng-model="register.password" />
                 <br />
 
                 <label>Referal Code</label>
-                <input type="number" class="form-control" />
+                <input type="number" class="form-control" ng-model="register.referal" />
                 <br />
 
-                <input type="button" class="btn btn-default btn-primary" value="Register" />
+                <input type="button" class="btn btn-default btn-primary" value="Register" ng-click="registerUser()"/>
                 <br />
             </div>
 
@@ -50,14 +50,14 @@
                 <br />
 
                 <label>Email</label>
-                <input type="email" class="form-control" />
+                <input type="email" class="form-control" ng-model="login.email"/>
                 <br />
 
                 <label>Password</label>
-                <input type="password" class="form-control" />
+                <input type="password" class="form-control" ng-model="login.password" />
                 <br />
 
-                <input type="button" class="btn btn-default btn-primary" value="Sign in" />
+                <input type="button" class="btn btn-default btn-primary" value="Sign in" ng-click="loginUser()"/>
                 <br />
             </div>
         </div>
