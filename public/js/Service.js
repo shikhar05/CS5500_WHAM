@@ -1,6 +1,9 @@
 ﻿app.factory("MyService", function ($http) {
+
+    var currentUserProfile = null;
+
     //Google Maps
-    var position ={lat:null,lon:null}
+    var position = { lat: null, lon: null }
     var initUserPosition = function (callback) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (pos) {
@@ -33,12 +36,58 @@
         return events;
     }
 
+
+    var register = function (newUser, callback) {
+        $http.post("/register", newUser)
+        .success(function (res) {
+            if (res == 'User already exists') {
+                callback("Username aready exists");
+            } else if (res == 'error') {
+                callback("Some Error occured in Server");
+            }
+            else if (res == 'ok') {
+                $http.post("/login", newUser)
+                    .success(function (res) {
+
+                        currentUserProfile = res.user;
+
+                        callback(currentUserProfile);
+                    });
+            }
+        });
+    };
+
+
+    var login = function (user, callback) {
+        $http.post("/login", user)
+       .success(function (res) {
+           console.log("Service");
+           console.log(res);
+           currentUserProfile = res;
+          
+           callback('ok');
+       })
+        .error(function (err) {
+            callback('error');
+        });
+    };
+
+    var getCurrentUSerProfile = function () {
+        return currentUserProfile;
+    }
+
     //Return block
     return {
         searchEvent: searchEvent,
         addToList: addToList,
         getEvents: getEvents,
         initUserPosition: initUserPosition,
-        getUserPosition: getUserPosition
+        getUserPosition: getUserPosition,
+
+        //*********************Login*********************
+        login: login,
+        getCurrentUSerProfile:getCurrentUSerProfile,
+        //*********************Register*********************
+        register: register
     }
 });
