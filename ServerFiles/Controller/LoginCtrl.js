@@ -1,6 +1,8 @@
 ﻿var path = require('path');
 var DBManager = require(path.resolve("./ServerFiles/DAO/DatabaseManager.js"))();
 
+var C_rewardPoints = 50;
+
 module.exports = function () {
 
     var register = function (newUser, callback) {
@@ -31,7 +33,6 @@ module.exports = function () {
             }
         });
     };
-
 
     var login = function (email, password, done) {
         DBManager.findUserProfileByEmailPassword(email, password, function (resp) {
