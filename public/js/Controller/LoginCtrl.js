@@ -1,5 +1,5 @@
 ﻿
-app.controller("LoginCtrl", function ($scope, MyService, $location) {
+app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService) {
 
     $scope.goToHome = function () {
         $location.url('/home');
@@ -8,7 +8,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location) {
     $scope.registerUser = function () {
         var newUSer = $scope.register;
 
-        MyService.register(newUSer, function (msg) {
+        LoginService.register(newUSer, function (msg) {
 
             console.log(msg);
 
@@ -23,10 +23,10 @@ app.controller("LoginCtrl", function ($scope, MyService, $location) {
 
         var user = $scope.login;
 
-        MyService.login(user, function (msg) {
+        LoginService.login(user, function (msg) {
 
             if (msg == 'ok') {
-                console.log(MyService.getCurrentUSerProfile());
+                console.log(LoginService.getCurrentUSerProfile());
                 $location.url("/home");
             } else if (msg == 'error') {
 
