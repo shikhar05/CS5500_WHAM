@@ -6,16 +6,18 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
     };
 
     $scope.registerUser = function () {
-        var newUSer = $scope.register;
 
-        LoginService.register(newUSer, function (msg) {
+        if ($scope.register.confirmPassword == $scope.register.password) {
+            var newUSer = $scope.register;
 
-            console.log(msg);
+            LoginService.register(newUSer, function (msg) {
 
+                $location.url("/home");
 
-            $location.url("/home");
+            });
+        } else {
 
-        });
+        };
 
     };
 

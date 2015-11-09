@@ -1,19 +1,23 @@
-﻿#Login{
-
+﻿#Login {
 }
 
-#Login .navbar{
+    #Login #logo {
+        font-weight: 900;
+    }
 
-}
+    #Login .navbar {
+    }
 
-#Login .register-form{
-    background-color:#fff;
-    padding:5px;
-}
+    #Login .register-form {
+    }
 
-#Login .login-form{
-    background-color:#fff;
-    padding:5px;
-    margin-top:100px;
-}
+    #Login .login-form {
+        margin-top: 100px;
+    }
 
+    #Login footer {
+        text-align: center;
+        padding: 15px;
+        margin-top: 20px;
+        height: 50px;
+    }
