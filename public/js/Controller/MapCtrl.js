@@ -1,46 +1,81 @@
 ﻿
-app.controller("MapCtrl", function ($scope, MyService, $element) {
+app.controller("MapCtrl", function ($rootScope,$scope, MyService, $element) {
 
     var map, infoWindow;
-    var markers = [];
-
+    var markers = []; 
     // map config
     var mapOptions = {
         center: new google.maps.LatLng(50, 2),
-        zoom: 16,
+        zoom: 14,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        scrollwheel: true
+        scrollwheel: true,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+            position: google.maps.ControlPosition.LEFT_BOTTOM
+        }
+
+    };
+
+    //
+    var oArgs = {
+        app_key: "k6C5qrCrdBgZMSkw",
+        q: "music",
+        where: "San Diego",
+        "date": "2013061000-2015062000",
+        page_size: 50,
+        sort_order: "popularity",
     };
 
     $scope.init = function () {
-        
+
         MyService.initUserPosition(function (msg) {
             if (msg == 'ok') {
                 var position = MyService.getUserPosition();
                 $scope.position = position;
 
-                mapOptions.center = new google.maps.LatLng($scope.position.lat, $scope.position.lon);
+                //set oArgs location parameter
+                oArgs.where = "Boston";
 
                 if (map === void 0) {
+                    //create map and center it to the user's location
+                    mapOptions.center = new google.maps.LatLng($scope.position.lat, $scope.position.lon);
                     map = new google.maps.Map($element[0], mapOptions);
+
+                    map.addListener('click', function () {
+
+                        if ($rootScope.showSidePanel == undefined) $rootScope.showSidePanel = false;
+                        $rootScope.showSidePanel = false;
+                        alert($rootScope.showSidePanel);
+                        infoWindow.close();
+                    });
+
                     setMarker(map, new google.maps.LatLng($scope.position.lat, $scope.position.lon), 'You are here', 'Just some content');
-                    setMarker(map, new google.maps.LatLng(51.508515, -0.125487), 'London', 'Just some content');
-                    setMarker(map, new google.maps.LatLng(52.370216, 4.895168), 'Amsterdam', 'More content');
-                    setMarker(map, new google.maps.LatLng(48.856614, 2.352222), 'Paris', 'Text here');
+
+                    //query
+                    EVDB.API.call("/events/search", oArgs, function (data) {
+
+                        for (var d in data.events.event) {
+                            var event = data.events.event[d];
+
+                            var info = "";
+
+                            info += '<div class="info-window">' +
+                                    '<h4>' + event.title + '</h4>' +
+                                    '<p>Venue: ' + event["venue_name"] + ', ' + event["venue_address"] + '</p><br/>' +
+                                    '<a href="' + event["venue_url"] + '" target="_blank">' + event["venue_url"] + '</a><br/>' +
+                                    '<a href="' + event.url + '" target="_blank">' + event.url + '</a><br/>' +
+                                    '</div>';
+                            setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, info);
+                        }
+                    })
                 }
-
-
                 MyService.searchEvent();
-
             }
             else {
                 alert(msg);
             }
         })
-
-        
     };
-
 
     // place a marker
     function setMarker(map, position, title, content) {
@@ -73,5 +108,4 @@ app.controller("MapCtrl", function ($scope, MyService, $element) {
             infoWindow.open(map, marker);
         });
     };
-
 });

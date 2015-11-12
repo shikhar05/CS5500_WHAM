@@ -7,3 +7,12 @@ app.directive('myMap', function () {
     };
 });
 
+
+app.directive('sidePanel', function () {
+    return {
+        restrict: 'E',
+        templateUrl: '/partials/SidePanel.html',
+        replace: true
+    };
+});
+

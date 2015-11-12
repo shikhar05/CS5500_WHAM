@@ -1,0 +1,14 @@
+﻿<div id="SidePanel" ng-controller="SidePanelCtrl" ng-class="{'showSidePanel' : showSidePanel, 'hideSidePanel' : !showSidePanel}">
+    
+    <button ng-click="toggleSidePanel()" ng-show="!showSidePanel">></button>
+
+    <pageslide ps-open="showSidePanel" ps-push="true" ps-side="left">
+        <button ng-click="toggleSidePanel()" ng-show="showSidePanel">X</button>
+
+        <h2>Filter and Search</h2>
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">@</span>
+            <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+        </div>
+    </pageslide>
+</div>

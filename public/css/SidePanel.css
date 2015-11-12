@@ -1,0 +1,14 @@
+﻿#SidePanel {
+    position: absolute;
+    z-index: 100;
+}
+    #SidePanel.showSidePanel {
+        width:200px;
+        height:100%;
+        background-color:darkblue; 
+    }
+    #SidePanel.hideSidePanel {
+        width:10px;
+        height:10px;
+    }
+
