@@ -1,6 +1,5 @@
 ﻿
 app.controller("MapCtrl", function ($rootScope,$scope, MyService, $element) {
-
     var map, infoWindow;
     var markers = []; 
     // map config
@@ -13,7 +12,6 @@ app.controller("MapCtrl", function ($rootScope,$scope, MyService, $element) {
         mapTypeControlOptions: {
             position: google.maps.ControlPosition.LEFT_BOTTOM
         }
-
     };
 
     //
@@ -53,17 +51,17 @@ app.controller("MapCtrl", function ($rootScope,$scope, MyService, $element) {
 
                     //query
                     EVDB.API.call("/events/search", oArgs, function (data) {
-
+                        
                         for (var d in data.events.event) {
                             var event = data.events.event[d];
-
+                            console.log(event);
                             var info = "";
 
                             info += '<div class="info-window">' +
                                     '<h4>' + event.title + '</h4>' +
                                     '<p>Venue: ' + event["venue_name"] + ', ' + event["venue_address"] + '</p><br/>' +
-                                    '<a href="' + event["venue_url"] + '" target="_blank">' + event["venue_url"] + '</a><br/>' +
-                                    '<a href="' + event.url + '" target="_blank">' + event.url + '</a><br/>' +
+                                    '<a href="' + event["venue_url"] + '" target="_blank">' + 'Venue URL' + '</a><br/>' +
+                                    '<a href="' + event.url + '" target="_blank">' + 'Event URL' + '</a><br/>' +
                                     '</div>';
                             setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, info);
                         }

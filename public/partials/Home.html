@@ -1,7 +1,8 @@
 ﻿<div id="home">
 
     <div class="top-navigation">
-        <button class="btn btn-default btn-primary" ng-click="goToLoginPage()">Sign in</button>
+        <button ng-class="{'signInBtn':userProfile == null}" ng-show="userProfile == null" ng-click="goToLoginPage()">Sign in</button>
+        <button ng-class="{'userBtn':userProfile != null}" ng-show="userProfile != null" ng-click="goToLoginPage()">{{userProfile.firstname}}</button>
     </div>
 
     <side-panel></side-panel>

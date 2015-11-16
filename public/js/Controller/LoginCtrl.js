@@ -9,7 +9,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
 
         if ($scope.register.confirmPassword == $scope.register.password) {
             var newUSer = $scope.register;
-
+            console.log(newUSer);
             LoginService.register(newUSer, function (msg) {
 
                 $location.url("/home");

@@ -16,14 +16,14 @@ module.exports = function () {
                 var referalCode = newUser.email.split('@')[0] + rand;
 
                 var newUserProfile = {
-                    'firstname': newUser.firstname,
-                    'lastname': newUser.lastname,
+                    'firstname': newUser.first,
+                    'lastname': newUser.last,
                     'email': newUser.email,
                     'password': newUser.password,
                     'referalCode': referalCode,
                     'rewardPoints': C_rewardPoints
                 };
-
+                console.log(newUserProfile);
                 DBManager.createUserProfile(newUserProfile, function (err, userProfile) {
 
                     if (err) { callback("error"); }

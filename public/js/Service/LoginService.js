@@ -13,7 +13,8 @@
             else if (res == 'ok') {
                 $http.post("/login", newUser)
                     .success(function (res) {
-
+                        console.log("service");
+                        console.log(currentUserProfile);
                         currentUserProfile = res.user;
 
                         callback(currentUserProfile);
@@ -28,7 +29,8 @@
            console.log("Service");
            console.log(res);
            currentUserProfile = res;
-
+           console.log("service");
+           console.log(currentUserProfile);
            callback('ok');
        })
         .error(function (err) {
