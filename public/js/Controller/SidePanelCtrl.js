@@ -58,7 +58,9 @@ app.controller("SidePanelCtrl", function ($rootScope, $scope, MyService) {
             delete $scope.search.errors.toDate;
         };
 
-        if ($scope.search.toDate < $scope.search.fromDate) {
+        if ($scope.search.toDate != '' && $scope.search.toDate != null &&
+            $scope.search.fromDate != '' && $scope.search.fromDate != null &&
+            $scope.search.toDate < $scope.search.fromDate) {
             $scope.search.errors.toDate = "To Date can not be before from date"
         } else {
             delete $scope.search.errors.toDate;
