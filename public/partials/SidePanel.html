@@ -1,33 +1,69 @@
 ﻿<div id="SidePanel" ng-controller="SidePanelCtrl" ng-class="{'showSidePanel' : showSidePanel, 'hideSidePanel' : !showSidePanel}">
 
     <button ng-click="toggleSidePanel()" ng-show="!showSidePanel" class="glyphicon glyphicon-align-justify showSidePanelBtn"></button>
-    <pageslide ps-open="showSidePanel" ps-push="true" ps-side="left">
-        <div class="">
-            <button ng-click="toggleSidePanel()" ng-show="showSidePanel" class="btn hideSidePanelBtn">Close</button>
-            <h3>Filter & Search</h3>
-            <div class="input-group filter">
-                <p ng-show="error.place">{{error.place}}<br /></p>
-                <span class="input-group-addon" id="basic-addon1">Place</span>
-                <input type="text" class="form-control" ng-model="search.place" placeholder="Place" aria-describedby="basic-addon1">
+
+    <pageslide ps-open="showSidePanel"
+               ps-push="true"
+               ps-side="left"
+               ps-speed="0.3">
+
+        <div class="sidepanel-content">
+
+            <button ng-click="toggleSidePanel()"
+                    ng-show="showSidePanel"
+                    class="btn hideSidePanelBtn">
+                X
+            </button>
+            <h2>
+                Filter & Search
+            </h2>
+
+            <br />
+
+            <label>Place</label>
+            <span class="error">{{search.errors.city}}</span>
+            <br />
+            <div class="input-group ">
+
+                <div class="input-group-addon"><span class=" glyphicon glyphicon-globe"></span></div>
+                <input type="text"
+                       class="form-control"
+                       ng-model="search.city"
+                       placeholder="City"
+                       aria-describedby="basic-addon1">
             </div><br />
-            <div class="input-group filter">
-                <p ng-show="error.type">{{error.type}}<br /></p>
-                <span class="input-group-addon" id="basic-addon1">Type</span>
-                <input type="text" class="" ng-model="search.type" placeholder="Type" aria-describedby="basic-addon1">
+
+            <label>Type of Event</label>
+            <span class="error">{{search.errors.type}}</span>
+            <br />
+            <div class="input-group ">
+
+                <div class="input-group-addon"><span class="glyphicon glyphicon-glass"></span></div>
+                <input type="text" class="form-control" ng-model="search.type" placeholder="Type" aria-describedby="basic-addon1">
             </div><br />
-            <div class="input-group filter">
-                <p ng-show="error.fromDate">{{error.fromDate}}<br /></p>
-                <span class="input-group-addon" id="basic-addon1">From Date</span>
-                <input type="date" class="" ng-model="search.fromDate" placeholder="From Date" aria-describedby="basic-addon1">
+
+            <label>From Date</label>
+            <span class="error">{{search.errors.fromDate}}</span>
+            <br />
+            <div class="input-group ">
+
+                <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
+                <input type="date" class="form-control" ng-model="search.fromDate" placeholder="From Date" aria-describedby="basic-addon1">
             </div><br />
-            <div class="input-group filter">
-                <p ng-show="error.toDate">{{error.toDate}}<br /></p>
-                <span class="input-group-addon" id="basic-addon1">To Date</span>
-                <input type="date" class="" ng-model="search.toDate" placeholder="To Date" aria-describedby="basic-addon1">
+
+            <label>To Date</label>
+            <span class="error">{{search.errors.toDate}}</span>
+            <br />
+            <div class="input-group ">
+
+                <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
+                <input type="date" class="form-control" ng-model="search.toDate" placeholder="To Date" aria-describedby="basic-addon1">
             </div><br />
-            <div class="input-group filter">
-                <button class="form-control" ng-click="search()">Submit</button>
+
+            <div>
+                <button class="form-control" ng-click="applyFilters()">Submit</button>
             </div>
         </div>
+
     </pageslide>
 </div>

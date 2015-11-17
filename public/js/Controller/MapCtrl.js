@@ -1,7 +1,7 @@
 ﻿
-app.controller("MapCtrl", function ($rootScope,$scope, MyService, $element) {
+app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
     var map, infoWindow;
-    var markers = []; 
+    var markers = [];
     // map config
     var mapOptions = {
         center: new google.maps.LatLng(50, 2),
@@ -50,7 +50,7 @@ app.controller("MapCtrl", function ($rootScope,$scope, MyService, $element) {
 
                     //query
                     EVDB.API.call("/events/search", oArgs, function (data) {
-                        
+
                         for (var d in data.events.event) {
                             var event = data.events.event[d];
                             var info = "";
@@ -80,7 +80,7 @@ app.controller("MapCtrl", function ($rootScope,$scope, MyService, $element) {
             position: position,
             map: map,
             title: title,
-            icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+            icon: '/img/red-dot.png'
         };
 
         if (title == 'You are here') {
