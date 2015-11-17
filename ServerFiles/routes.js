@@ -1,4 +1,5 @@
 ﻿var path = require('path');
+var DBManager = require(path.resolve("./ServerFiles/DAO/DatabaseManager.js"))();
 
 var LoginCtrl = require(path.resolve('./ServerFiles/Controller/LoginCtrl.js'))();
 
@@ -12,11 +13,13 @@ module.exports = function (app, passport, LocalStrategy) {
     }));
 
     passport.serializeUser(function (user, done) {
-        done(null, user);
+        done(null, user._id);
     });
 
-    passport.deserializeUser(function (user, done) {
-        done(null, user);
+    passport.deserializeUser(function (id, done) {
+        DBManager.findUserProfileById(id, function () {
+            done(null, user);
+        });
     });
 
     app.get("/privacy", function (req, res) {
@@ -31,8 +34,15 @@ module.exports = function (app, passport, LocalStrategy) {
         //res.sendfile(path.resolve(__dirname+'./public/Default.html'));
     });
 
+    // Get User
+    app.get("/api/user/email=:email", function (req, res) {
+        LoginCtrl.checkIfUserExist(req.params.email, function (responce) {
+            res.send(responce);
+        });
+    });
 
-    app.post("/register", function (req, res) {
+    // Post User
+    app.post("/api/user", function (req, res) {
 
         LoginCtrl.register(req.body, function (responce) {
             res.send(responce);
@@ -40,10 +50,12 @@ module.exports = function (app, passport, LocalStrategy) {
 
     });
 
+    // Login
     app.post("/login", passport.authenticate('Authentication'), function (req, res) {
 
         var user = req.user;
-
+        delete user._id;
+        delete user.password;
         res.json(user);
 
     });

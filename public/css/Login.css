@@ -11,7 +11,7 @@
     #Login .register-form {
     }
 
-    #Login .login-form {
+    #Login .login-form,.forgot-password-form {
         margin-top: 100px;
     }
 
@@ -20,4 +20,18 @@
         padding: 15px;
         margin-top: 20px;
         height: 50px;
+    }
+
+    #Login .error {
+        color: red;
+        float: right;
+    }
+
+    #Login .authentication-error{
+        color:red;
+    }
+
+    #Login .float-right{
+        padding-top:7px;
+        float:right
     }

@@ -15,6 +15,10 @@ module.exports = function () {
         UserProfile.findByEmail(email, callback);
     };
 
+    var findUserProfileById = function (id, callback) {
+        UserProfile.findById(id, callback);
+    };
+
     var findUserProfileByEmailPassword = function (email, password, callback) {
         UserProfile.findByEmailPassword(email, password, callback);
     };

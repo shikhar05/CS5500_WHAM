@@ -5,11 +5,21 @@ var C_rewardPoints = 50;
 
 module.exports = function () {
 
+    var checkIfUserExist = function (email,callback) {
+        DBManager.findUserProfileByEmail(email, function (user) {
+            if (user) {
+                callback("ok");
+            } else {
+                callback(null);
+            }
+        });
+    };
+
     var register = function (newUser, callback) {
 
         DBManager.findUserProfileByEmail(newUser.email, function (user) {
             if (user) {
-                callback.send("User already exists");
+                callback("User already exists");
             } else {
 
                 var rand = Math.floor((Math.random() * 100) + 54);
@@ -23,12 +33,9 @@ module.exports = function () {
                     'referalCode': referalCode,
                     'rewardPoints': C_rewardPoints
                 };
-                console.log(newUserProfile);
-                DBManager.createUserProfile(newUserProfile, function (err, userProfile) {
-
-                    if (err) { callback("error"); }
-
-                    callback("ok");
+                DBManager.createUserProfile(newUserProfile, function (resp) {
+                    if (resp == 'error') { callback("error"); }
+                    else { callback("ok"); }
                 });
             }
         });
@@ -40,14 +47,17 @@ module.exports = function () {
             else {
                 user = resp;
                 if (user != null) {
-                    var userProfile = {
-                        'firstname': user.firstname,
-                        'lastname': user.lastname,
-                        'email': user.email,
-                        'referalCode': user.referalCode,
-                        'rewardPoints': user.rewardPoints
-                    };
-                    return done(null, userProfile);
+                    //var userProfile = {
+                    //    '_id':user._id,
+                    //    'firstname': user.firstname,
+                    //    'lastname': user.lastname,
+                    //    'email': user.email,
+                    //    'referalCode': user.referalCode,
+                    //    'rewardPoints': user.rewardPoints
+                    //};
+                    //return done(null, userProfile);
+                    
+                    return done(null, user);
                 } else {
                     return done(null, false, { message: 'Unable to login' });
                 }
@@ -55,14 +65,10 @@ module.exports = function () {
         });
     };
 
-    var test = function () {
-        console.log("jhv");
-    };
-
     return {
         register: register,
         login: login,
-        test: test
+        checkIfUserExist: checkIfUserExist
     };
 
 };

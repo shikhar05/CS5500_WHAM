@@ -9,7 +9,6 @@ app.controller("HomeCtrl", function ($scope, MyService, $location, LoginService)
     $scope.$watch(function () {
         return LoginService.getCurrentUSerProfile();
     }, function (response) {
-        console.log(response);
         $scope.userProfile = response;
     }, true);
 

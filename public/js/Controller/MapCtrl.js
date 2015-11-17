@@ -43,7 +43,6 @@ app.controller("MapCtrl", function ($rootScope,$scope, MyService, $element) {
 
                         if ($rootScope.showSidePanel == undefined) $rootScope.showSidePanel = false;
                         $rootScope.showSidePanel = false;
-                        alert($rootScope.showSidePanel);
                         infoWindow.close();
                     });
 
@@ -54,7 +53,6 @@ app.controller("MapCtrl", function ($rootScope,$scope, MyService, $element) {
                         
                         for (var d in data.events.event) {
                             var event = data.events.event[d];
-                            console.log(event);
                             var info = "";
 
                             info += '<div class="info-window">' +

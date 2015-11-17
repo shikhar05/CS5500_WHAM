@@ -20,12 +20,22 @@ module.exports = function (mongoose) {
         var newUserProfileObject = new UserProfileModel(newUserProfile);
 
         newUserProfileObject.save(function (err, savedUserProfileResponce) {
-
             if (err) {
                 callback("error");
             }
             else {
                 callback("ok");
+            }
+        });
+    };
+
+    var findById = function (id, callback) {
+        UserProfileModel.findOne({ _id: id }, function (err, userFound) {
+            if (err) {
+                callback("error");
+            }
+            else {
+                callback(userFound);
             }
         });
     };
@@ -54,6 +64,7 @@ module.exports = function (mongoose) {
 
     return {
         create: create,
+        findById: findById,
         findByEmail: findByEmail,
         findByEmailPassword: findByEmailPassword
     }
