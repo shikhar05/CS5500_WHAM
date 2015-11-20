@@ -40,9 +40,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
         $scope.checkIfUserExist();
         $scope.validateRegisterPassword();
         $scope.validateRegisterConfirmPassword();
-
         if (Object.keys($scope.register.errors).length == 0) {
-
             var newUSer = $scope.register;
             LoginService.register(newUSer, function (msg) {
                 if (msg == 'ok') {
@@ -101,6 +99,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
         $scope.validateForgotPasswordEmail();
         if ($scope.forgotPassword.errors.email == undefined) {
             LoginService.checkIfUserExist($scope.forgotPassword.email, function (res) {
+              
                 if (res == null) {
                     $scope.forgotPassword.errors.email = "Email not registered with us";
                 }
