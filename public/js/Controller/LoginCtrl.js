@@ -54,6 +54,8 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
 
     //*********************************************** Login User ****************************************//
 
+
+
     $scope.loginUser = function () {
 
         $scope.validateLoginEmail();
@@ -111,6 +113,8 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
     $scope.validateRegisterFirst = function () {
         if ($scope.register.first == null || $scope.register.first == "") {
             $scope.register.errors.first = "Please enter First Name.";
+        } else if (!isAlphaNumeric($scope.register.first) || isNumeric($scope.register.first)) {
+            $scope.register.errors.first = "First Name should be Alphabet.";
         } else {
             delete $scope.register.errors.first;
         };
@@ -119,6 +123,8 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
     $scope.validateRegisterLast = function () {
         if ($scope.register.last == null || $scope.register.last == "") {
             $scope.register.errors.last = "Please enter Last Name.";
+        } else if (!isAlphaNumeric($scope.register.last) || isNumeric($scope.register.last)) {
+            $scope.register.errors.last = "Last Name should be Alphabets.";
         } else {
             delete $scope.register.errors.last;
         };
@@ -149,7 +155,9 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
     $scope.validateRegisterPassword = function () {
         if ($scope.register.password == null || $scope.register.password == "") {
             $scope.register.errors.password = "Please choose a Password.";
-        } else {
+        } else if ($scope.register.password.length < 8 || $scope.register.password.length>15) {
+            $scope.register.errors.password = "Password should be atleast 8 charachters and atmost 15 charaacters."
+    }else {
             if ($scope.register.confirmPassword != null || $scope.register.confirmPassword != "") {
                 $scope.validateRegisterConfirmPassword();
             }
@@ -168,6 +176,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
     };
 
     //******************************************* Login Validations ****************************************//
+
 
     $scope.validateLoginEmail = function () {
         if ($scope.login.email == null || $scope.login.email == "") {
@@ -216,4 +225,14 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
 function validateEmail(email) {
     var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
     return re.test(email);
+}
+
+function isAlphaNumeric(text) {
+    var re = /^[a-z0-9]+$/i;
+    return re.test(text);
+};
+
+function isNumeric(text) {
+    var re = /^[0-9]+$/i;
+    return re.test(text);
 }

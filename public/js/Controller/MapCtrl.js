@@ -18,10 +18,11 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
     var oArgs = {
         app_key: "k6C5qrCrdBgZMSkw",
         q: "music",
-        where: "San Diego",
+        where: "",
         "date": "2013061000-2015062000",
         page_size: 50,
         sort_order: "popularity",
+        within:100
     };
 
     $scope.init = function () {
@@ -32,8 +33,8 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
                 $scope.position = position;
 
                 //set oArgs location parameter
-                oArgs.where = "Boston";
-
+                oArgs.where = $scope.position.lat+","+ $scope.position.lon;
+                console.log(oArgs.where);
                 if (map === void 0) {
                     //create map and center it to the user's location
                     mapOptions.center = new google.maps.LatLng($scope.position.lat, $scope.position.lon);
@@ -50,7 +51,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
 
                     //query
                     EVDB.API.call("/events/search", oArgs, function (data) {
-
                         for (var d in data.events.event) {
                             var event = data.events.event[d];
                             var info = "";
@@ -61,6 +61,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
                                     '<a href="' + event["venue_url"] + '" target="_blank">' + 'Venue URL' + '</a><br/>' +
                                     '<a href="' + event.url + '" target="_blank">' + 'Event URL' + '</a><br/>' +
                                     '</div>';
+                            console.log(event.latitude+" " + event.longitude);
                             setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, info);
                         }
                     })
