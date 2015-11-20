@@ -21,6 +21,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
         where: "San Diego",
         "date": "2013061000-2015062000",
         page_size: 50,
+        within:10,
         sort_order: "popularity",
     };
 
@@ -32,7 +33,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
                 $scope.position = position;
 
                 //set oArgs location parameter
-                oArgs.where = "Boston";
+                oArgs.where = $scope.position.lat+","+ $scope.position.lon;
 
                 if (map === void 0) {
                     //create map and center it to the user's location

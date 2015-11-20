@@ -1,5 +1,5 @@
 ﻿
-var app = angular.module("wham", ['ngRoute']);
+var app = angular.module("wham", ['ngRoute', "pageslide-directive"]);
 
 app.config(['$routeProvider',
 function ($routeProvider) {
