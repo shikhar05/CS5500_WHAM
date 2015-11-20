@@ -376,8 +376,8 @@ describe('Controller: LoginCtrl', function () {
         expect(scope.login.errors.password).toMatch("Please enter Password");
     });
 
-    //password=null
-    it('should take the user to home page', function () {
+    
+    it('should take the authentic user to home page', function () {
         spyOn(LoginService, 'login').and.callThrough();
         spyOn(Location, "path");
         scope.login = {
@@ -387,6 +387,18 @@ describe('Controller: LoginCtrl', function () {
         };      
         scope.loginUser();      
         expect(Location.path).toHaveBeenCalledWith("/home")       
+    });
+
+    it('should throw error: Invalid Details - Please enter correct details.', function () {
+        spyOn(LoginService, 'login').and.callThrough();
+        spyOn(Location, "path");
+        scope.login = {
+            email: "m8@gmail.com",
+            password: "ii1",
+            errors: {}
+        };
+        scope.loginUser();
+        expect(scope.login.errors.authentication).toMatch("Invalid Details - Please enter correct details.");
     });
 });
 
