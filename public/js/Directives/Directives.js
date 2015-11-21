@@ -16,3 +16,12 @@ app.directive('sidePanel', function () {
     };
 });
 
+
+app.directive('infoBox', function () {
+    return {
+        restrict: 'E',
+        templateUrl: '/partials/InfoBox.html',
+        replace: true
+    };
+});
+

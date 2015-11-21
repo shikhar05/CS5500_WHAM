@@ -1,5 +1,5 @@
 ﻿
-app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
+app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $compile) {
     var map, infoWindow;
     var markers = [];
     // map config
@@ -18,10 +18,10 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
     var oArgs = {
         app_key: "k6C5qrCrdBgZMSkw",
         q: "music",
-        where: "San Diego",
+        where: "Boston",
         "date": "2013061000-2015062000",
         page_size: 50,
-        within:10,
+        within: 10,
         sort_order: "popularity",
     };
 
@@ -33,7 +33,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
                 $scope.position = position;
 
                 //set oArgs location parameter
-                oArgs.where = $scope.position.lat+","+ $scope.position.lon;
+                oArgs.where = $scope.position.lat + "," + $scope.position.lon;
 
                 if (map === void 0) {
                     //create map and center it to the user's location
@@ -49,22 +49,17 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element) {
 
                     setMarker(map, new google.maps.LatLng($scope.position.lat, $scope.position.lon), 'You are here', 'Just some content');
 
+                   
                     //query
                     EVDB.API.call("/events/search", oArgs, function (data) {
 
                         for (var d in data.events.event) {
                             var event = data.events.event[d];
-                            var info = "";
-
-                            info += '<div class="info-window">' +
-                                    '<h4>' + event.title + '</h4>' +
-                                    '<p>Venue: ' + event["venue_name"] + ', ' + event["venue_address"] + '</p><br/>' +
-                                    '<a href="' + event["venue_url"] + '" target="_blank">' + 'Venue URL' + '</a><br/>' +
-                                    '<a href="' + event.url + '" target="_blank">' + 'Event URL' + '</a><br/>' +
-                                    '</div>';
-                            setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, info);
+                            $scope.event = event;
+                            var compiled = $compile("<div><info-box></info-box></div>")($scope);
+                            setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
                         }
-                    })
+                    });
                 }
                 MyService.searchEvent();
             }
