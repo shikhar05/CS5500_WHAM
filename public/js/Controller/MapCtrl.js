@@ -19,10 +19,9 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         app_key: "k6C5qrCrdBgZMSkw",
         q: "music",
         where: "Boston",
-        "date": "2013061000-2015062000",
-        page_size: 50,
-        within: 10,
-        sort_order: "popularity",
+        date: "2013061000-2015062000",
+        page_size: 70,
+        within: 10
     };
 
     $scope.init = function () {
@@ -34,7 +33,12 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
                 //set oArgs location parameter
                 oArgs.where = $scope.position.lat + "," + $scope.position.lon;
-
+                var date = new Date();
+                currentMonth = date.getMonth();
+                currentDate = date.getDate();
+                if (currentMonth < 10) { currentMonth = '0' + currentMonth; }
+                if (currentDate < 10) { currentDate = '0' + currentDate; }
+                oArgs.date = "" + date.getFullYear() + currentMonth + currentDate + '00-' + date.getFullYear() + currentMonth + currentDate + '00'
                 if (map === void 0) {
                     //create map and center it to the user's location
                     mapOptions.center = new google.maps.LatLng($scope.position.lat, $scope.position.lon);
