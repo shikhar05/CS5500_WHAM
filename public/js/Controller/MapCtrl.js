@@ -49,14 +49,14 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
                     setMarker(map, new google.maps.LatLng($scope.position.lat, $scope.position.lon), 'You are here', 'Just some content');
 
-                   
                     //query
                     EVDB.API.call("/events/search", oArgs, function (data) {
 
                         for (var d in data.events.event) {
                             var event = data.events.event[d];
-                            $scope.event = event;
-                            var compiled = $compile("<div><info-box></info-box></div>")($scope);
+                            var scope = $rootScope.$new();
+                            scope.event = event;
+                            var compiled = $compile("<div><info-box></info-box></div>")(scope);
                             setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
                         }
                     });
