@@ -1,0 +1,47 @@
+﻿<div class="user-info-content">
+    <div>
+        <div>Email ID</div>
+        <div class="input-group search">
+            <p class="form-control">{{user.email}}</p>
+            <span class="input-group-addon">
+                <span ng-class="{ 'glyphicon':user.verified, 'glyphicon-ok':user.verified, 'success':user.verified}" title="Your Email ID is verified.">
+                </span>
+                <span ng-class="{ 'glyphicon':!user.verified, 'glyphicon-remove':!user.verified, 'error':!user.verified}" title="Please veriy your Email ID">
+
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <div>
+        <div>First Name</div>
+        <input type="text" class="form-control" ng-model="user.firstname">
+        <div class="error">{{errorFirstname}}</div>
+    </div>
+    <div>
+        <div>Last Name</div>
+        <input type="text" class="form-control" ng-model="user.lastname">
+        <div class="error"> {{errorLastname}}</div>
+    </div>
+    <div>
+        <div>Phone Number</div>
+        <input type="number" class="form-control" ng-pattern="/^[0-9]{10}$/" ng-model="user.phone">
+        <div class="error">{{errorPhone}}</div>
+    </div>
+    <div>
+        <div>Security Question</div>
+        <input type="text" class="form-control" ng-model="user.secq">
+        <div class="error">{{errorSecurityquestion}}</div>
+    </div>
+    <div>
+        <div>Security Answer</div>
+        <input type="password" class="form-control" ng-model="user.seca">
+        <div class="error">{{errorSecurityanswer}}</div>
+    </div>
+    <br />
+    <div>
+        <button class="btn form-control" ng-click="updateInfo()">Update my Details</button>
+    </div>
+    <div class="success">{{userInfoSuccMsg}}</div>
+    <div class="error">{{userInfoErrorMsg}}</div>
+</div>

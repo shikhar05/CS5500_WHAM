@@ -65,10 +65,23 @@ module.exports = function () {
         });
     };
 
+    var logout = function (reqUser, callback) {
+        DBManager.findUserProfileByEmail(reqUser.email, function (err, user) {
+            if (user != null) {
+                req.session.destroy();
+                callback(200);
+            }
+            else {
+                callback("Error");
+            }
+        })
+    };
+
     return {
         register: register,
         login: login,
-        checkIfUserExist: checkIfUserExist
+        checkIfUserExist: checkIfUserExist,
+        logout:logout
     };
 
 };

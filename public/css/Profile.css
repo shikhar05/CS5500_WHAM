@@ -1,0 +1,42 @@
+﻿#profile {
+}
+
+    #profile .userBtn {
+        
+        background-color: #4683ea;
+        border: 1px solid #4285f4;
+        font-weight: bold;
+        color: white;
+        width: 68px;
+        height: 30px;
+        border-radius: 4px;
+        position: absolute;
+        margin: 8px;
+        top: 2px;
+        right: 0;
+    }
+    #profile .profileOptions {
+        padding: 5px;
+        width: 180px;
+        height: 120px;
+        background-color: white;
+        box-shadow: inherit;
+        position: absolute;
+        top: 40px;
+        right: 0;
+        margin: 8px;
+        border-radius: 5px;
+    }
+
+    #profile .floatLeft {
+        float: left;
+    }
+
+
+    #profile .center {
+        text-align: center;
+    }
+
+    #profile .floatRight {
+        float: right;
+    }

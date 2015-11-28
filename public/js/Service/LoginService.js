@@ -1,4 +1,4 @@
-﻿app.factory("LoginService", function ($http) {
+﻿app.factory("LoginService", function ($http,$location) {
 
     var currentUserProfile = null;
 
@@ -48,9 +48,21 @@
         return currentUserProfile;
     };
 
+    var logout = function () {
+        $http.post("/logout", currentUserProfile)
+      .success(function (res) {
+          currentUserProfile = null;
+          $location.url("/");
+      })
+       .error(function (err) {
+           
+       });
+    };
+
     return {
         getCurrentUSerProfile: getCurrentUSerProfile,
         login: login,
+        logout:logout,
         register: register,
         checkIfUserExist: checkIfUserExist
     }

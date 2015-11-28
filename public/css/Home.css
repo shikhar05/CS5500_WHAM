@@ -25,3 +25,45 @@
         height: 30px;
         border-radius: 4px;
     }
+    
+    #home .userBtn {
+        
+        background-color: #4683ea;
+        border: 1px solid #4285f4;
+        font-weight: bold;
+        color: white;
+        width: 68px;
+        height: 30px;
+        border-radius: 4px;
+        position: absolute;
+        margin: 8px;
+        top: 2px;
+        right: 0;
+    }
+
+
+    #home .profileOptions{
+        padding:5px;
+        width:180px;
+        height:120px;
+        background-color:white;
+        box-shadow:inherit;
+        position: absolute;
+        top: 40px;
+        right: 0;
+        margin:8px;
+        border-radius:5px;
+    }
+
+    #home .floatLeft{
+        float:left
+    }
+
+
+    #home .center{
+        text-align:center;
+    }
+    
+    #home .floatRight{
+        float:right
+    }

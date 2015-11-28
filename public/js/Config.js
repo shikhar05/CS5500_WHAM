@@ -12,6 +12,10 @@ function ($routeProvider) {
             templateUrl: 'partials/Login.html',
             controller: 'LoginCtrl',
         }).
+        when('/profile', {
+            templateUrl: 'partials/Profile.html',
+            controller: 'ProfileCtrl',
+        }).
     otherwise({
         redirectTo: '/home'
     })

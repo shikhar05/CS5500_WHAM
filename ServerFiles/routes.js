@@ -60,4 +60,9 @@ module.exports = function (app, passport, LocalStrategy) {
 
     });
 
+    app.post("/logout", function (req, res) {
+        LoginCtrl.logout(req.body, function (responce) {
+            res.send(responce);
+        });
+    });
 };

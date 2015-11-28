@@ -15,8 +15,8 @@ describe('Controller: LoginCtrl', function () {
         first: "Prashan1",
         last: "M1",
         email: "m1@gmail.com",
-        password: "ii1",
-        confirmPassword: "ii1",
+        password: "iiiiiiiiii",
+        confirmPassword: "iiiiiiiiii",
         referal: "11",
         errors: {}
     }]
@@ -80,8 +80,8 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashan",
             last: "M",
             email: "m@gmail.com",
-            password: "ii",
-            confirmPassword: "ii",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
             referal: "1",
             errors: {}
         };
@@ -99,8 +99,8 @@ describe('Controller: LoginCtrl', function () {
             first: "",
             last: "M",
             email: "m@gmail.com",
-            password: "ii",
-            confirmPassword: "ii",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
             referal: "1",
             errors: {}
         };
@@ -116,13 +116,47 @@ describe('Controller: LoginCtrl', function () {
             first: null,
             last: "M",
             email: "m@gmail.com",
-            password: "ii",
-            confirmPassword: "ii",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
             referal: "1",
             errors: {}
         };
         scope.registerUser();
         expect(scope.register.errors.first).toMatch("Please enter First Name.");
+    });
+
+    // first="*a" 
+    it('should throw error: First Name should only be alpha-numeric', function () {
+        spyOn(LoginService, 'register').and.callThrough();
+
+        scope.register = {
+            first: "#a",
+            last: "M",
+            email: "m@gmail.com",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
+            referal: "1",
+            errors: {}
+        };
+        scope.registerUser();
+        expect(scope.register.errors.first).toMatch("First Name should only be alpha-numeric");
+    });
+
+    // first="111" 
+    it('should throw error: First Name cannot be all numbers', function () {
+        spyOn(LoginService, 'register').and.callThrough();
+
+        scope.register = {
+            first: "111",
+            last: "M",
+            email: "m@gmail.com",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
+            referal: "1",
+            errors: {}
+        };
+        scope.registerUser();
+        expect(scope.register.errors.first).toMatch("First Name cannot be all numbers");
     });
 
     // last = ""
@@ -133,8 +167,8 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashant",
             last: "",
             email: "m@gmail.com",
-            password: "ii",
-            confirmPassword: "ii",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
             referal: "1",
             errors: {}
         };
@@ -150,13 +184,47 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashant",
             last: null,
             email: "m@gmail.com",
-            password: "ii",
-            confirmPassword: "ii",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
             referal: "1",
             errors: {}
         };
         scope.registerUser();
         expect(scope.register.errors.last).toMatch("Please enter Last Name.");
+    });
+
+    // last="*a" 
+    it('should throw error: Last Name should only be alpha-numeric', function () {
+        spyOn(LoginService, 'register').and.callThrough();
+
+        scope.register = {
+            first: "adam",
+            last: "*a",
+            email: "m@gmail.com",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
+            referal: "1",
+            errors: {}
+        };
+        scope.registerUser();
+        expect(scope.register.errors.last).toMatch("Last Name should only be alpha-numeric");
+    });
+
+    // last="111" 
+    it('should throw error: Last Name cannot be all numbers', function () {
+        spyOn(LoginService, 'register').and.callThrough();
+
+        scope.register = {
+            first: "adam",
+            last: "111",
+            email: "m@gmail.com",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
+            referal: "1",
+            errors: {}
+        };
+        scope.registerUser();
+        expect(scope.register.errors.last).toMatch("Last Name cannot be all numbers");
     });
 
     // email=""
@@ -167,8 +235,8 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashant",
             last: "M",
             email: "",
-            password: "ii",
-            confirmPassword: "ii",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
             referal: "1",
             errors: {}
         };
@@ -184,8 +252,8 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashant",
             last: "M",
             email: null,
-            password: "ii",
-            confirmPassword: "ii",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
             referal: "1",
             errors: {}
         };
@@ -200,8 +268,8 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashant",
             last: "M",
             email: "123abc",
-            password: "ii",
-            confirmPassword: "ii",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
             referal: "1",
             errors: {}
         };
@@ -216,8 +284,8 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashan1",
             last: "M1",
             email: "m1@gmail.com",
-            password: "ii1",
-            confirmPassword: "ii1",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiiii",
             referal: "11",
             errors: {}
         };
@@ -259,6 +327,40 @@ describe('Controller: LoginCtrl', function () {
         expect(scope.register.errors.password).toMatch("Please choose a Password.");
     });
 
+    //password=1
+    it('should throw error: Password must be a atlease 8 characters and atmost 15 characters', function () {
+        spyOn(LoginService, 'register').and.callThrough();
+
+        scope.register = {
+            first: "Prashan2",
+            last: "M2",
+            email: "m2@gmail.com",
+            password: "1",
+            confirmPassword: "1",
+            referal: "11",
+            errors: {}
+        };
+        scope.registerUser();
+        expect(scope.register.errors.password).toMatch("Password must be a atlease 8 characters and atmost 15 characters");
+    });
+
+    //password=11111111111111111111111111
+    it('should throw error: Password must be a atlease 8 characters and atmost 15 characters', function () {
+        spyOn(LoginService, 'register').and.callThrough();
+
+        scope.register = {
+            first: "Prashan2",
+            last: "M2",
+            email: "m2@gmail.com",
+            password: "11111111111111111111111111",
+            confirmPassword: "11111111111111111111111111",
+            referal: "11",
+            errors: {}
+        };
+        scope.registerUser();
+        expect(scope.register.errors.password).toMatch("Password must be a atlease 8 characters and atmost 15 characters");
+    });
+
     //confirmPassword=""
     it('should throw error: Please confirm Password.', function () {
         spyOn(LoginService, 'register').and.callThrough();
@@ -267,7 +369,7 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashan2",
             last: "M2",
             email: "m2@gmail.com",
-            password: "abc",
+            password: "iiiiiiiiii",
             confirmPassword: "",
             referal: "11",
             errors: {}
@@ -284,7 +386,7 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashan2",
             last: "M2",
             email: "m2@gmail.com",
-            password: "abc",
+            password: "iiiiiiiiii",
             confirmPassword: null,
             referal: "11",
             errors: {}
@@ -300,8 +402,8 @@ describe('Controller: LoginCtrl', function () {
             first: "Prashan2",
             last: "M2",
             email: "m2@gmail.com",
-            password: "abc",
-            confirmPassword: "abd",
+            password: "iiiiiiiiii",
+            confirmPassword: "iiiiiiiii",
             referal: "11",
             errors: {}
         };
@@ -317,7 +419,7 @@ describe('Controller: LoginCtrl', function () {
 
         scope.login = {
             email: "",
-            password: "abc",
+            password: "iiiiiiiiii",
             errors: {}
         };
         scope.loginUser();
@@ -330,7 +432,7 @@ describe('Controller: LoginCtrl', function () {
 
         scope.login = {
             email: null,
-            password: "abc",
+            password: "iiiiiiiiii",
             errors: {}
         };
         scope.loginUser();
@@ -343,7 +445,7 @@ describe('Controller: LoginCtrl', function () {
 
         scope.login = {
             email: "abc123",
-            password: "abc",
+            password: "iiiiiiiiii",
             errors: {}
         };
         scope.loginUser();
@@ -382,7 +484,7 @@ describe('Controller: LoginCtrl', function () {
         spyOn(Location, "path");
         scope.login = {
             email: "m1@gmail.com",
-            password: "ii1",
+            password: "iiiiiiiiii",
             errors: {}
         };      
         scope.loginUser();      
@@ -394,7 +496,7 @@ describe('Controller: LoginCtrl', function () {
         spyOn(Location, "path");
         scope.login = {
             email: "m8@gmail.com",
-            password: "ii1",
+            password: "iiiiiiiiii",
             errors: {}
         };
         scope.loginUser();

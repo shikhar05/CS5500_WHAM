@@ -64,6 +64,10 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
                             setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
                         }
                     });
+                    console.log(markers[0] + " " + markers[0].getPosition());
+                    map.panTo(markers[0].getPosition());
+                    
+                    infoWindow.open(map, markers[0]);
                 }
                 MyService.searchEvent();
             }
@@ -91,7 +95,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         marker = new google.maps.Marker(markerOptions);
         markers.push(marker); // add marker to array
 
-        google.maps.event.addListener(marker, 'click', function () {
+        google.maps.event.addListener(marker, 'mouseover', function () {
             // close window if not undefined
             if (infoWindow !== void 0) {
                 infoWindow.close();
@@ -102,6 +106,19 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             };
             infoWindow = new google.maps.InfoWindow(infoWindowOptions);
             infoWindow.open(map, marker);
+        });
+
+        google.maps.event.addListener(marker, 'mouseout', function () {
+            // close window if not undefined
+            if (infoWindow !== void 0) {
+                infoWindow.close();
+            }
+            // create new window
+            var infoWindowOptions = {
+                content: content
+            };
+            infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+            infoWindow.close(map, marker);
         });
     };
 });
