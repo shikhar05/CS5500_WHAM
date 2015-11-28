@@ -344,6 +344,7 @@ describe('Controller: LoginCtrl', function () {
         expect(scope.register.errors.password).toMatch("Password must be a atlease 8 characters and atmost 15 characters");
     });
 
+<<<<<<< HEAD
     //password=11111111111111111111111111
     it('should throw error: Password must be a atlease 8 characters and atmost 15 characters', function () {
         spyOn(LoginService, 'register').and.callThrough();
@@ -361,6 +362,8 @@ describe('Controller: LoginCtrl', function () {
         expect(scope.register.errors.password).toMatch("Password must be a atlease 8 characters and atmost 15 characters");
     });
 
+=======
+>>>>>>> 3f9dd263834a18b471bc5995dadcbe6724945be7
     //confirmPassword=""
     it('should throw error: Please confirm Password.', function () {
         spyOn(LoginService, 'register').and.callThrough();
