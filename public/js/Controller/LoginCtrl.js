@@ -114,7 +114,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
         } else if (!isAlphaNumeric($scope.register.first)) {
             $scope.register.errors.first = "First Name should only be alpha-numeric";
         }else if (isAllNumeric($scope.register.first)) {
-            $scope.register.errors.first = "First Name can not be all numbers";
+            $scope.register.errors.first = "First Name cannot be all numbers";
         }else {
             delete $scope.register.errors.first;
         };
@@ -126,7 +126,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
         } else if (!isAlphaNumeric($scope.register.last)) {
             $scope.register.errors.last = "Last Name should only be alpha-numeric";
         } else if (isAllNumeric($scope.register.last)) {
-            $scope.register.errors.last = "Last Name can not be all numbers";
+            $scope.register.errors.last = "Last Name cannot be all numbers";
         } else {
             delete $scope.register.errors.last;
         };
