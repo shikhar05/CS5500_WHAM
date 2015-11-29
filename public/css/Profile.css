@@ -40,3 +40,8 @@
     #profile .floatRight {
         float: right;
     }
+
+     #changePassword .error {
+        color: red;
+        float: right;
+    }
