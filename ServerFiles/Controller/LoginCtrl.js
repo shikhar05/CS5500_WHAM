@@ -5,7 +5,7 @@ var C_rewardPoints = 50;
 
 module.exports = function () {
 
-    var checkIfUserExist = function (email,callback) {
+    var checkIfUserExist = function (email, callback) {
         DBManager.findUserProfileByEmail(email, function (user) {
             if (user) {
                 callback("ok");
@@ -37,6 +37,10 @@ module.exports = function () {
                     if (resp == 'error') { callback("error"); }
                     else { callback("ok"); }
                 });
+
+                if (newUser.referal != null) {
+                    DBManager.updateRewardPoints(newUser.referal);
+                }
             }
         });
     };
@@ -56,7 +60,7 @@ module.exports = function () {
                     //    'rewardPoints': user.rewardPoints
                     //};
                     //return done(null, userProfile);
-                    
+
                     return done(null, user);
                 } else {
                     return done(null, false, { message: 'Unable to login' });
@@ -77,11 +81,15 @@ module.exports = function () {
         })
     };
 
+    var addReferalPoints = function (referalcode) {
+
+    };
+
     return {
         register: register,
         login: login,
         checkIfUserExist: checkIfUserExist,
-        logout:logout
+        logout: logout
     };
 
 };

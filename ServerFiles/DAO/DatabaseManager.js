@@ -23,10 +23,27 @@ module.exports = function () {
         UserProfile.findByEmailPassword(email, password, callback);
     };
 
+    var updateRewardPoints = function (referalCode) {
+        UserProfile.updateRewardPoints(referalCode);
+    };
+
+    var updatePreference = function (email, preference, callback) {
+        console.log(email + preference);
+        UserProfile.updatePreference(email,preference, callback);
+    };
+
+    var deletePreference = function (email, preference, callback) {
+        console.log(email + preference);
+        UserProfile.deletePreference(email, preference, callback);
+    };
+
     return {
         createUserProfile: createUserProfile,
         findUserProfileByEmail: findUserProfileByEmail,
-        findUserProfileByEmailPassword: findUserProfileByEmailPassword
+        findUserProfileByEmailPassword: findUserProfileByEmailPassword,
+        updateRewardPoints: updateRewardPoints,
+        updatePreference: updatePreference,
+        deletePreference: deletePreference
     };
 
 }

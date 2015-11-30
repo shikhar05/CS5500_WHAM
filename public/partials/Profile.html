@@ -20,10 +20,11 @@
                 <p class="center">{{userProfile.email}}</p>
                 <hr />
 
-                <input type="button"
-                       class="floatRight btn btn-default"
-                       value="Logout"
-                       ng-click="logout()" />
+                <button type="button"
+                        class="floatRight btn btn-default"
+                        ng-click="logout()" >
+                    Logout
+                    </button>
             </div>
         </div>
     </nav>
@@ -35,23 +36,28 @@
 
         <div id="profile-container" class="container">
             <div class="col-sm-3 options">
-                <ul class="nav">
-                    <li ng-class="{'tab':true,'option':true, 'block-element':true ,'isActive' : activeTabIndex == 0}">
-                        <a role="tab" data-toggle="tab" class="tab-button" ng-click="openTab(0)">
-                            User Info
-                        </a>
-                    </li>
-                    <li ng-class="{'tab':true,'option':true, 'block-element':true ,'isActive' : activeTabIndex == 1}">
-                        <a role="tab" data-toggle="tab" class="tab-button" ng-click="openTab(1)">
-                            History
-                        </a>
-                    </li>
-                    <li ng-class="{'tab':true,'option':true, 'block-element':true ,'isActive' : activeTabIndex == 2}">
-                        <a role="tab" data-toggle="tab" class="tab-button" ng-click="openTab(2)">
-                            Preferences
-                        </a>
-                    </li>
-                </ul>
+                <div class="content">
+                    <div class="side-tabs">
+                        <ul>
+                            <li ng-class="{'tab':true,'option':true, 'block-element':true ,'active' : activeTabIndex == 0}">
+                                <a role="tab" data-toggle="tab" class="tab-button" ng-click="openTab(0)">
+                                    User Info
+                                </a>
+                            </li>
+                            <li ng-class="{'tab':true,'option':true, 'block-element':true ,'active' : activeTabIndex == 1}">
+                                <a role="tab" data-toggle="tab" class="tab-button" ng-click="openTab(1)">
+                                    History
+                                </a>
+                            </li>
+                            <li ng-class="{'tab':true,'option':true, 'block-element':true ,'active' : activeTabIndex == 2}">
+                                <a role="tab" data-toggle="tab" class="tab-button" ng-click="openTab(2)">
+                                    Preferences
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
 
             <div class="col-sm-9 content">

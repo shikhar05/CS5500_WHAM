@@ -1,7 +1,10 @@
 ﻿var path = require('path');
+
 var DBManager = require(path.resolve("./ServerFiles/DAO/DatabaseManager.js"))();
 
 var LoginCtrl = require(path.resolve('./ServerFiles/Controller/LoginCtrl.js'))();
+
+var ProfileCtrl = require(path.resolve('./ServerFiles/Controller/ProfileCtrl.js'))();
 
 module.exports = function (app, passport, LocalStrategy) {
 
@@ -62,6 +65,26 @@ module.exports = function (app, passport, LocalStrategy) {
 
     app.post("/logout", function (req, res) {
         LoginCtrl.logout(req.body, function (responce) {
+            res.send(responce);
+        });
+    });
+
+    app.post("/api/user/preference", function (req, res) {
+        var email = req.body.email;
+        var preference = req.body.preference;
+        ProfileCtrl.updatePreference(email,preference, function (responce) {
+            res.send(responce);
+        });
+    });
+
+    app.post("/api/user/preference/delete", function (req, res) {
+     
+        var email = req.body.email;
+        var preference = req.body.preference;
+        console.log("delete");
+        console.log(email);
+        console.log(preference);
+        ProfileCtrl.deletePreference(email, preference, function (responce) {
             res.send(responce);
         });
     });

@@ -2,6 +2,7 @@
 app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
 
     $scope.activeTabIndex = 0;
+    $scope.activeSubTabIndex = 0;
 
     $scope.userProfile = null;
 
@@ -11,6 +12,14 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
         confirmPassword: null,
         errors: {}
     };
+
+
+    $scope.newPreference = {
+        of: $scope.activeSubTabIndex,
+        type: null,
+        keywords: null,
+        errors: {}
+    }
 
     $scope.init = function () {
         $scope.profileOptionsToggle = false;
@@ -39,29 +48,44 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
     };
 
     $scope.openTab = function (index) {
+        $scope.activeSubTabIndex = 0;
         $scope.activeTabIndex = index;
+
+        //Clean input fields
+        $scope.editPassword = {
+            oldPassword: null,
+            newPassword: null,
+            confirmPassword: null,
+            errors: {}
+        };
+
+        $scope.newPreference = {
+            of: $scope.activeSubTabIndex,
+            type: null,
+            keywords: null,
+            errors: {}
+        }
     }
 
-   
 
     //*************************************changePassword*************************************
 
     $scope.changePassword = function () {
-      //  $scope.validateOldPassword();
+        //  $scope.validateOldPassword();
         $scope.validateNewPassword();
         $scope.validateNewConfirmPassword();
 
         if (Object.keys($scope.editPassword.errors).length == 0) {
 
-           // var newUSer = $scope.register;
-           // LoginService.register(newUSer, function (msg) {
-              //  if (msg == 'ok') {
-                //    $location.url("/home");
-               // }
-          //  });
+            // var newUSer = $scope.register;
+            // LoginService.register(newUSer, function (msg) {
+            //  if (msg == 'ok') {
+            //    $location.url("/home");
+            // }
+            //  });
         };
     };
-   // $scope.validateOldPassword = function () {
+    // $scope.validateOldPassword = function () {
     //}
     $scope.validateNewPassword = function () {
         if ($scope.editPassword.newPassword == null || $scope.editPassword.newPassword == "") {
@@ -85,4 +109,66 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
             delete $scope.editPassword.errors.confirmPassword;
         };
     };
+
+    $scope.openSubTab = function (index) {
+        $scope.activeSubTabIndex = index;
+        if ($scope.activeTabIndex == 2) {
+            $scope.newPreference.of = index;
+        }
+    };
+
+    // ****************************************Preferences *************************************************//
+
+    $scope.addPreference = function () {
+        if ($scope.newPreference != null) {
+            LoginService.updatePreference($scope.newPreference);
+            $scope.newPreference = {
+                of: $scope.activeSubTabIndex,
+                type: null,
+                keywords: null,
+                errors: {}
+            }
+        }
+    };
+
+    $scope.updatePreference = function (index) {
+        var pref = $scope.userProfile.preferences[$scope.activeSubTabIndex][index];
+        $scope.newPreference = {
+            of: $scope.activeSubTabIndex,
+            type: pref.type,
+            keywords: pref.keywords,
+            errors: {}
+        }
+    };
+
+
+    $scope.removePreference = function (index) {
+        var conf = confirm("Do you really want to delete your preference?");
+        if (conf) {
+            var pref = $scope.userProfile.preferences[$scope.activeSubTabIndex][index];
+            var deletePref = {
+                of: $scope.activeSubTabIndex,
+                type: pref.type,
+                keywords: pref.keywords,
+                errors: {}
+            }
+            console.log(deletePref);
+            LoginService.deletePreference(deletePref);
+            $scope.newPreference = {
+                of: $scope.activeSubTabIndex,
+                type: null,
+                keywords: null,
+                errors: {}
+            }
+        }
+    }
+
+    $scope.clearNewPreferenceField = function () {
+        $scope.newPreference = {
+            of: $scope.activeSubTabIndex,
+            type: null,
+            keywords: null,
+            errors: {}
+        }
+    }
 });
