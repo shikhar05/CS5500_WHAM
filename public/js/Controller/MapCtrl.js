@@ -1,15 +1,13 @@
 ﻿
-app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $compile) {
+app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $compile, $http) {
     var map, infoWindow;
     var markers = [];
-
-    $scope.loading = true;
 
     $scope.directionsTo;
 
     var spinner, directionsBox;
 
-
+    var isInitialLoad = false, filterApplied = false;
 
     // map config
     var mapOptions = {
@@ -26,13 +24,15 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
     var oArgs = {
         app_key: "k6C5qrCrdBgZMSkw",
         category: "",
+        q: "",
         where: "",
         date: "",
-        page_size: 50,
-        within: 10
+        page_size: 20,
+        within: 5
     };
 
     $scope.init = function () {
+        isInitialLoad = true;
 
         MyService.initUserPosition(function (msg) {
             if (msg == 'ok') {
@@ -51,7 +51,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             }
         })
     };
-
     // place a marker
     function setMarker(map, position, title, content) {
         var marker;
@@ -75,17 +74,20 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             if (infoWindow !== void 0) {
                 infoWindow.close();
             }
-            // create new window
-            var infoWindowOptions = {
-                content: content
-            };
-            infoWindow = new google.maps.InfoWindow(infoWindowOptions);
-            infoWindow.open(map, marker);
 
-            setTimeout(function () {
-                infoWindow.close();
-            }, 4000);
+            if (isInitialLoad) {
+                // create new window
+                var infoWindowOptions = {
+                    content: content
+                };
+                infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+                infoWindow.open(map, marker);
 
+                setTimeout(function () {
+                    infoWindow.close();
+                }, 4000);
+                isInitialLoad = false;
+            }
         };
 
         google.maps.event.addListener(marker, 'click', function () {
@@ -133,7 +135,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         return MyService.getFilter();
     },
     function (filter) {
-        $scope.loading = true;
         $scope.filter = filter;
         printOnMap(oArgs);
     },
@@ -148,42 +149,98 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
         //setting defaults
         var date = new Date();
-        currentMonth = date.getMonth();
-        currentDate = date.getDate();
-        if (currentMonth < 10) { currentMonth = '0' + currentMonth; }
-        if (currentDate < 10) { currentDate = '0' + currentDate; }
-        oArgs.date = "" + date.getFullYear() + currentMonth + currentDate + '00-' + date.getFullYear() + currentMonth + currentDate + '00';
+        oArgs.date = getDateInFormat(date, date);
         oArgs.category = "";
 
         //check for filters applied
-        if (filterAppliedType() || filterAppliedFromDate() || filterAppliedToDate()) {
+        if (filterAppliedType() ||
+            filterAppliedKeywords() ||
+            filterAppliedWithin() ||
+            filterAppliedFromDate() ||
+            filterAppliedToDate()) {
+
+            // If any error in filters, do not update map
+            if (Object.keys($scope.filter.errors).length > 0) return;
+
+            filterApplied = true;
             if (filterAppliedType()) oArgs.category = $scope.filter.type;
-            if (filterAppliedFromDate() && !filterAppliedToDate()) oArgs.date = "" + $scope.filter.fromDate + "00-" + $scope.filter.fromDate + "00";
-            if (!filterAppliedFromDate() && filterAppliedToDate()) oArgs.date = "" + date + "00-" + $scope.filter.toDate + "00";
-            if (filterAppliedFromDate() && filterAppliedToDate()) oArgs.date = "" + $scope.filter.fromDate + "00-" + $scope.filter.toDate + "00";
+            if (filterAppliedKeywords()) oArgs.q = $scope.filter.keywords;
+            if (filterAppliedWithin()) oArgs.within = $scope.filter.within;
+            if (filterAppliedFromDate() && !filterAppliedToDate()) oArgs.date = getDateInFormat($scope.filter.fromDate, $scope.filter.fromDate);
+            if (!filterAppliedFromDate() && filterAppliedToDate()) oArgs.date = getDateInFormat(date, $scope.filter.toDate);
+            if (filterAppliedFromDate() && filterAppliedToDate()) oArgs.date = getDateInFormat($scope.filter.fromDate, $scope.filter.toDate);
 
         }
+        console.log(oArgs.within);
+        $scope.loading = true;
 
         deleteMarkers();
 
         setMarker(map, new google.maps.LatLng($scope.position.lat, $scope.position.lon), 'You are here', '');
 
+        console.log(oArgs.category);
+        if (oArgs.category != null && oArgs.category != "") {
+            oArgs.category = oArgs.category.toLowerCase().split(' ').join('_');
+        }
+
+        console.log(oArgs.category);
         //api call
 
         //query
-        EVDB.API.call("/events/search", oArgs, function (data) {
-            for (var d in data.events.event) {
+        //EVDB.API.call("/events/search", oArgs, function (data) {
+        //    for (var d in data.events.event) {
 
-                var event = data.events.event[d];
-                var scope = $scope.$new();
-                scope.event = event;
-                console.log(event.title);
-                console.log(event);
+        //        var event = data.events.event[d];
+        //        var scope = $scope.$new();
+        //        scope.event = event;
 
-                var compiled = $compile("<div><info-box></info-box></div>")(scope);
-                setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
-            }
-            $scope.loading = false;
+        //        var compiled = $compile("<div><info-box></info-box></div>")(scope);
+        //        setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
+        //    }
+        //    $scope.loading = false;
+        //});
+
+        var url = "http://api.eventful.com/json/events/search?app_key=k6C5qrCrdBgZMSkw";
+
+        if (filterAppliedKeywords()) url += "&keywords=" + oArgs.q;
+
+        url += "&location=" + $scope.position.lat.toFixed(6) + "," + $scope.position.lon.toFixed(6);
+        //Within
+        url += "&within=" + parseInt(oArgs.within);
+
+        if (filterAppliedFromDate() || filterAppliedToDate()) url += "&date=" + oArgs.date;
+        else url += "&date=" + oArgs.date;
+
+        if (filterAppliedType()) url += "&category=" + oArgs.category;
+
+//        url += "&sort_order=relevance"
+
+        //Size
+        url += "&page_size=" + parseInt(oArgs.page_size)
+        url += "&page_number=1"
+        url += "&include=categories"
+
+        console.log(url);
+        url += '&callback=JSON_CALLBACK';
+
+        $http.jsonp(url)
+                 .success(function (data) {
+                     console.log(data);
+                     for (var d in data.events.event) {
+
+                         var event = data.events.event[d];
+                         var scope = $scope.$new();
+                         scope.event = event;
+                         var compiled = $compile("<div><info-box></info-box></div>")(scope);
+
+                         setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
+                     }
+
+                    
+                     $scope.loading = false;
+                 }).error(function (err) {
+            console.log("err");
+            console.log(err);
         });
 
         if (spinner == undefined) {
@@ -210,6 +267,15 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         }
         return false;
     }
+
+    function filterAppliedKeywords() {
+        if ($scope.filter != null) {
+            if ($scope.filter.keywords == null || $scope.filter.keywords == '') return false;
+            else return true;
+        }
+        return false;
+    }
+
     function filterAppliedFromDate() {
         if ($scope.filter != null) {
             if ($scope.filter.fromDate == null || $scope.filter.fromDate == '') return false;
@@ -220,6 +286,14 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
     function filterAppliedToDate() {
         if ($scope.filter != null) {
             if ($scope.filter.toDate == null || $scope.filter.toDate == '') return false;
+            else return true;
+        }
+        return false;
+    }
+
+    function filterAppliedWithin() {
+        if ($scope.filter != null) {
+            if ($scope.filter.within == null || $scope.filter.within == '') return false;
             else return true;
         }
         return false;
@@ -256,9 +330,8 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         directionsDisplay = new google.maps.DirectionsRenderer({
             'map': map,
             'preserveViewport': true,
-            'draggable': true
+            'suppressMarkers': true
         });
-
 
         $scope.directionsTo = toAdd;
 
@@ -267,7 +340,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             destination: lat + "," + lon,
             travelMode: google.maps.TravelMode.DRIVING
         }, function (response, status) {
-            console.log(status);
             if (status === google.maps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
             } else {
@@ -277,3 +349,19 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
     }
 });
 
+
+function getDateInFormat(from, to) {
+    return "" + from.getFullYear() + getMonth(from) + getDay(from) + '00-' + to.getFullYear() + getMonth(to) + getDay(to) + '00';
+}
+
+function getMonth(d) {
+    var currentMonth = d.getMonth()+1;
+    if (currentMonth < 10) { currentMonth = '0' + currentMonth; }
+    return currentMonth;
+}
+
+function getDay(d) {
+    var currentDate = d.getDate();
+    if (currentDate < 10) { currentDate = '0' + currentDate; }
+    return currentDate;
+}

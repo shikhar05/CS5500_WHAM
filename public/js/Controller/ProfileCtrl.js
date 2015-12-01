@@ -1,6 +1,15 @@
 ﻿
 app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
 
+    $scope.types = ["music", "conference", "comedy",
+                        "learning education", "family fun kids", "festivals parades", "movies film", "food",
+                        "fundraisers", "art ", "support", "holiday", "books", "attractions", "community",
+                        "business", "singles social", "schools alumni", "clubs associations",
+                        "outdoors recreation", "performing arts", "animals", "politics activism", "sales", "science",
+                        "religion spirituality", "sports", "technology", "other"];
+
+
+
     $scope.activeTabIndex = 0;
     $scope.activeSubTabIndex = 0;
 
@@ -70,7 +79,7 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
     //*************************************changePassword*************************************
 
     $scope.changePassword = function () {
-        //$scope.validateOldPassword();
+        $scope.validateOldPassword();
         $scope.validateNewPassword();
         $scope.validateNewConfirmPassword();
 
@@ -93,8 +102,11 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
 
         };
     };
-    // $scope.validateOldPassword = function () {
-    //}
+    $scope.validateOldPassword = function () {
+        if ($scope.editPassword.oldPassword == null || $scope.editPassword.oldPassword == "") {
+            $scope.editPassword.errors.oldPassword = "Please enter your old Password.";
+        }
+    }
     $scope.validateNewPassword = function () {
         if ($scope.editPassword.newPassword == null || $scope.editPassword.newPassword == "") {
             $scope.editPassword.errors.newPassword = "Please choose a Password.";
@@ -128,7 +140,10 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
     // ****************************************Preferences *************************************************//
 
     $scope.addPreference = function () {
-        if ($scope.newPreference != null) {
+        if ($scope.newPreference.type == null && $scope.newPreference.keywords == null) {
+            $scope.newPreference.errors.type = "Please choose a category or keyword";
+        } else {
+            delete $scope.newPreference.errors.type;
             LoginService.updatePreference($scope.newPreference);
             $scope.newPreference = {
                 of: $scope.activeSubTabIndex,
@@ -136,6 +151,7 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
                 keywords: null,
                 errors: {}
             }
+
         }
     };
 
@@ -169,7 +185,7 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
                 errors: {}
             }
         }
-    }
+    };
 
     $scope.clearNewPreferenceField = function () {
         $scope.newPreference = {
@@ -178,5 +194,6 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
             keywords: null,
             errors: {}
         }
-    }
+    };
+
 });
