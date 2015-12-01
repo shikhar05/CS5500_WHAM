@@ -46,7 +46,7 @@
         padding:5px;
         width:180px;
         height:120px;
-        background-color:white;
+        background-color:#efecec;
         box-shadow:inherit;
         position: absolute;
         top: 40px;
@@ -66,4 +66,11 @@
     
     #home .floatRight{
         float:right
+    }
+
+    .directionBox{
+        position:absolute;
+        bottom:38px;
+        left:130px;
+        z-index:100;
     }

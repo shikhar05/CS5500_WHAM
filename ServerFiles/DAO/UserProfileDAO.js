@@ -110,7 +110,8 @@ module.exports = function (mongoose) {
                 console.log(index);
                 for (var i in userFound.preferences[index]) {
                     if (userFound.preferences[index][i].type == type) {
-                        userFound.preferences[index][i].keywords += " " + keywords
+                        //userFound.preferences[index][i].keywords += " " + keywords
+                        userFound.preferences[index][i].keywords = keywords;
                         removeDuplicates(userFound.preferences[index][i].keywords);
                         updated = true;
                     }
@@ -192,6 +193,26 @@ module.exports = function (mongoose) {
         return a.join(" ");
     }
 
+    var changePassword = function (email, oldPass, newPass, callback) {
+        UserProfileModel.findOne({ email: email, password: oldPass }, function (err, user) {
+            if (user) {
+                user.password = newPass;
+
+                user.save(function (err, user) {
+                    if (err) {
+                        callback('db error');
+                    } else {
+                        callback("ok");
+                    }
+
+                });
+
+            } else {
+                callback("errror")
+            }
+        })
+    }
+
 
     return {
         create: create,
@@ -200,6 +221,7 @@ module.exports = function (mongoose) {
         findByEmailPassword: findByEmailPassword,
         updateRewardPoints: updateRewardPoints,
         updatePreference: updatePreference,
-        deletePreference: deletePreference
+        deletePreference: deletePreference,
+        changePassword: changePassword
     }
 };

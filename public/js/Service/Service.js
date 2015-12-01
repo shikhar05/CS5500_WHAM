@@ -3,11 +3,9 @@
     //filter
     var filter;
     var getFilter = function () {
-        console.log(filter);
         return filter;
     }
     var setFilter = function (newFilter) {
-        console.log(filter);
         filter = newFilter;
     }
 

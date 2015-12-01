@@ -13,7 +13,6 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
         errors: {}
     };
 
-
     $scope.newPreference = {
         of: $scope.activeSubTabIndex,
         type: null,
@@ -71,18 +70,27 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
     //*************************************changePassword*************************************
 
     $scope.changePassword = function () {
-        //  $scope.validateOldPassword();
+        //$scope.validateOldPassword();
         $scope.validateNewPassword();
         $scope.validateNewConfirmPassword();
 
         if (Object.keys($scope.editPassword.errors).length == 0) {
 
-            // var newUSer = $scope.register;
-            // LoginService.register(newUSer, function (msg) {
-            //  if (msg == 'ok') {
-            //    $location.url("/home");
-            // }
-            //  });
+            LoginService.changePassword($scope.editPassword, function (msg) {
+                $scope.editPassword = {
+                    oldPassword: null,
+                    newPassword: null,
+                    confirmPassword: null,
+                    errors: {}
+                };
+
+                if (msg == 'ok') {
+                    alert("Password changed successfully");
+                } else {
+                    alert("Incorrect old-password");
+                }
+            });
+
         };
     };
     // $scope.validateOldPassword = function () {

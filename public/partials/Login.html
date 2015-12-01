@@ -100,7 +100,8 @@
                            ng-model="login.email"
                            placeholder="Email Address"
                            ng-change="validateLoginEmail()"
-                           ng-focus="validateLoginEmail()" />
+                           ng-focus="validateLoginEmail()"
+                           ng-enter="loginUser()" />
                     <br />
 
                     <label>Password</label>
@@ -110,7 +111,8 @@
                            ng-model="login.password"
                            placeholder="Password"
                            ng-change="validateLoginPassword()"
-                           ng-focus="validateLoginPassword()" />
+                           ng-focus="validateLoginPassword()"
+                           ng-enter="loginUser()" />
                     <br />
                     <div ng-show="login.errors.authentication">
                         <span class="authentication-error">{{login.errors.authentication}}</span>

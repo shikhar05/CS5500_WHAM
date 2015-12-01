@@ -23,8 +23,20 @@ module.exports = function () {
         });
     };
 
+    var changePassword = function (passwordData,callback) {
+
+        var email = passwordData.email;
+        var oldPass = passwordData.oldPassword
+        var newPass = passwordData.newPassword
+
+        DBManager.changePassword(email, oldPass, newPass, function (msg) {
+            callback(msg);
+        });
+    }
+
     return {
         updatePreference: updatePreference,
-        deletePreference: deletePreference
+        deletePreference: deletePreference,
+        changePassword: changePassword
     }
 };

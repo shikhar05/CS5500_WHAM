@@ -69,6 +69,14 @@ module.exports = function (app, passport, LocalStrategy) {
         });
     });
 
+    app.post("/api/user/password", function (req, res) {
+
+        ProfileCtrl.changePassword(req.body, function (responce) {
+            res.send(responce);
+        });
+
+    });
+
     app.post("/api/user/preference", function (req, res) {
         var email = req.body.email;
         var preference = req.body.preference;

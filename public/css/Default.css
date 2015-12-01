@@ -7,3 +7,9 @@
 #logo {
     font-weight: 900;
 }
+
+
+#spinner{
+    position:relative;
+    z-index:100;
+}

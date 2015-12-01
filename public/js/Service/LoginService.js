@@ -73,7 +73,7 @@
 
     var deletePreference = function (preference) {
         var data = { 'email': currentUserProfile.email, 'preference': preference }
-        $http.post("/api/user/preference/delete",data)
+        $http.post("/api/user/preference/delete", data)
        .success(function (res) {
            currentUserProfile.preferences = res;
            callback(res);
@@ -81,7 +81,24 @@
         .error(function (err) {
             callback('error');
         });
-    }
+    };
+
+    var changePassword = function (passData, callback) {
+
+        var data = {
+            email: currentUserProfile.email,
+            oldPassword: passData.oldPassword,
+            newPassword: passData.newPassword
+        };
+
+        $http.post("/api/user/password", data)
+        .success(function (res) {
+            callback(res);
+        })
+        .error(function (err) {
+            
+        })
+    };
 
     return {
         getCurrentUSerProfile: getCurrentUSerProfile,
@@ -90,6 +107,7 @@
         register: register,
         checkIfUserExist: checkIfUserExist,
         updatePreference: updatePreference,
-        deletePreference: deletePreference
+        deletePreference: deletePreference,
+        changePassword: changePassword
     }
 });

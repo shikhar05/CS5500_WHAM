@@ -56,6 +56,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
 
     $scope.loginUser = function () {
 
+        delete $scope.login.errors.authentication;
         $scope.validateLoginEmail();
         $scope.validateLoginPassword();
 

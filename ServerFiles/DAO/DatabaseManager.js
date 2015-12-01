@@ -33,8 +33,11 @@ module.exports = function () {
     };
 
     var deletePreference = function (email, preference, callback) {
-        console.log(email + preference);
         UserProfile.deletePreference(email, preference, callback);
+    };
+
+    var changePassword = function (email, oldPass, newPass,callback) {
+        UserProfile.changePassword(email, oldPass, newPass, callback);
     };
 
     return {
@@ -43,7 +46,8 @@ module.exports = function () {
         findUserProfileByEmailPassword: findUserProfileByEmailPassword,
         updateRewardPoints: updateRewardPoints,
         updatePreference: updatePreference,
-        deletePreference: deletePreference
+        deletePreference: deletePreference,
+        changePassword: changePassword
     };
 
 }
