@@ -1,9 +1,14 @@
 ﻿<div ng-controller="InfoBoxCtrl" class="info-window" ng-init="init()">
     <h4>{{event.title}}</h4>
+    
     <p class="description" ng-show="event.description != 'There is no description for this event.'">{{event.description}}</p>
-    <p>Venue:{{event["venue_name"]}} ,{{event["venue_address"]}}</p><br />
-    <a href='{{event["venue_url"]}}' target=" _blank"> Venue URL</a><br />
-    <a href='{{event.url}}' target=" _blank" ng-click="t()"> Event URL</a><br />
-    <a href="" ng-click="getDirections(event['venue_address'])">Get Directions to here</a>
+    
+    <label>Address</label>
+    <p>{{event["venue_name"]}}</p><p>{{event["venue_address"]}}</p>
+    
+    <!--<a href='{{event["venue_url"]}}' target="_blank"> Venue URL</a><br />-->
+    <a href='{{event.url}}' target="_blank">See more about this event</a> | 
+    <a href="" ng-click="getDirections(event['venue_address'])">Get Directions to here</a> | 
+
 </div>
 

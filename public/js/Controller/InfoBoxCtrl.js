@@ -6,8 +6,8 @@ app.controller("InfoBoxCtrl", function ($scope, $compile) {
         if ($scope.event.description) {
             $scope.event.description = $scope.event.description.replace(/<\/?[^>]+(>|$)/g, "");
 
-            if ($scope.event.description.length > 250) {
-
+            if ($scope.event.description.length > 350) {
+                $scope.event.description = $scope.event.description.substring(0,350)+"..."
             }
         }
     };

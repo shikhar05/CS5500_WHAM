@@ -44,7 +44,9 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
         if (Object.keys($scope.register.errors).length == 0) {
 
             var newUSer = $scope.register;
-            newUSer.referal.trim();
+            if (newUSer.referal){
+                newUSer.referal.trim();
+            }
             LoginService.register(newUSer, function (msg) {
                 if (msg == 'ok') {
                     $location.url("/home");
