@@ -6,7 +6,6 @@
         border: 1px solid #4285f4;
         font-weight: bold;
         color: white;
-        width: 68px;
         height: 30px;
         border-radius: 4px;
         position: absolute;
@@ -18,7 +17,6 @@
 
     #profile .profileOptions {
         padding: 5px;
-        width: 180px;
         height: 120px;
         background-color: #efecec;
         box-shadow: inherit;

@@ -1,5 +1,16 @@
 ﻿
-app.controller("InfoBoxCtrl", function ($scope) {
+app.controller("InfoBoxCtrl", function ($scope, $compile) {
+
+
+    $scope.init = function () {
+        if ($scope.event.description) {
+            $scope.event.description = $scope.event.description.replace(/<\/?[^>]+(>|$)/g, "");
+
+            if ($scope.event.description.length > 250) {
+
+            }
+        }
+    };
 
     $scope.getDirections = function (address) {
 
@@ -9,8 +20,8 @@ app.controller("InfoBoxCtrl", function ($scope) {
         var lat = event.latitude;
         var lon = event.longitude;
 
-        $scope.$parent.calculateAndDisplayRoute(address,lat,lon);
+        $scope.$parent.calculateAndDisplayRoute(address, lat, lon);
     };
 
-    
+
 });
