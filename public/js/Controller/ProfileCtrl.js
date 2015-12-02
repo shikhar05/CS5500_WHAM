@@ -105,6 +105,8 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location) {
     $scope.validateOldPassword = function () {
         if ($scope.editPassword.oldPassword == null || $scope.editPassword.oldPassword == "") {
             $scope.editPassword.errors.oldPassword = "Please enter your old Password.";
+        } else {
+            delete $scope.editPassword.errors.oldPassword;
         }
     }
     $scope.validateNewPassword = function () {
