@@ -1,7 +1,9 @@
 ﻿
-app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $compile, $http) {
+app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $compile, $http, LoginService) {
     var map, infoWindow;
     var markers = [];
+
+    $scope.userProfile = null;
 
     $scope.directionsTo;
 
@@ -27,7 +29,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         q: "",
         where: "",
         date: "",
-        page_size: 20,
+        page_size: 50,
         within: 5
     };
 
@@ -51,6 +53,15 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             }
         })
     };
+
+    $scope.$watch(function () {
+        return LoginService.getCurrentUSerProfile();
+    }, function (response) {
+        $scope.userProfile = response;
+        printOnMap(oArgs);
+    }, true);
+
+
     // place a marker
     function setMarker(map, position, title, content) {
         var marker;
@@ -147,10 +158,44 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             map = new google.maps.Map($element[0], mapOptions);
         }
 
+
         //setting defaults
         var date = new Date();
         oArgs.date = getDateInFormat(date, date);
+
         oArgs.category = "";
+        oArgs.q = "";
+
+
+        // User looged in Apply preferences
+        if ($scope.userProfile && $scope.filter.goingWith != null && $scope.filter.goingWith != '') {
+
+            var preferences = $scope.userProfile.preferences;
+
+            preferences = preferences[$scope.filter.goingWith];
+
+            var categories = "", keywords = "";
+            for (var i in preferences) {
+                if (categories == "") {
+                    categories += preferences[i]["type"];
+                } else {
+                    categories += "," + preferences[i]["type"];
+                }
+                if (preferences[i]["keywords"]) {
+                    karray = preferences[i]["keywords"].split(" ");
+                    for (var j in karray) {
+                        if (keywords == "") {
+                            keywords += "description:"+karray[j];
+                        } else {
+                            keywords += "%20||%20description:" + karray[j];
+                        }
+                    }
+                }
+            }
+
+            oArgs.category = categories;
+            oArgs.q = keywords;
+        }
 
         //check for filters applied
         if (filterAppliedType() ||
@@ -164,21 +209,34 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
             filterApplied = true;
             if (filterAppliedType()) oArgs.category = $scope.filter.type;
-            if (filterAppliedKeywords()) oArgs.q = $scope.filter.keywords;
+            if (filterAppliedKeywords()) {
+                var k = "";
+                var karray = $scope.filter.keywords.split(" ");
+               
+                for (var j in karray) {
+                    if (k == "") {
+                        k += "description:" + karray[j];
+                    } else {
+                        k += "%20||%20description:" + karray[j];
+                    }
+                }
+
+                oArgs.q = k;
+                console.log(oArgs.q);
+            }
             if (filterAppliedWithin()) oArgs.within = $scope.filter.within;
             if (filterAppliedFromDate() && !filterAppliedToDate()) oArgs.date = getDateInFormat($scope.filter.fromDate, $scope.filter.fromDate);
             if (!filterAppliedFromDate() && filterAppliedToDate()) oArgs.date = getDateInFormat(date, $scope.filter.toDate);
             if (filterAppliedFromDate() && filterAppliedToDate()) oArgs.date = getDateInFormat($scope.filter.fromDate, $scope.filter.toDate);
 
         }
-        console.log(oArgs.within);
+
         $scope.loading = true;
 
         deleteMarkers();
 
         setMarker(map, new google.maps.LatLng($scope.position.lat, $scope.position.lon), 'You are here', '');
 
-        console.log(oArgs.category);
         if (oArgs.category != null && oArgs.category != "") {
             oArgs.category = oArgs.category.toLowerCase().split(' ').join('_');
         }
@@ -200,34 +258,17 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         //    $scope.loading = false;
         //});
 
-        var url = "http://api.eventful.com/json/events/search?app_key=k6C5qrCrdBgZMSkw";
 
-        if (filterAppliedKeywords()) url += "&keywords=" + oArgs.q;
-
-        url += "&location=" + $scope.position.lat.toFixed(6) + "," + $scope.position.lon.toFixed(6);
-        //Within
-        url += "&within=" + parseInt(oArgs.within);
-
-        if (filterAppliedFromDate() || filterAppliedToDate()) url += "&date=" + oArgs.date;
-        else url += "&date=" + oArgs.date;
-
-        if (filterAppliedType()) url += "&category=" + oArgs.category;
-
-//        url += "&sort_order=relevance"
-
-        //Size
-        url += "&page_size=" + parseInt(oArgs.page_size)
-        url += "&page_number=1"
-        url += "&include=categories"
-
+        var url = getApiUrl();
         console.log(url);
-        url += '&callback=JSON_CALLBACK';
-
         $http.jsonp(url)
                  .success(function (data) {
                      console.log(data);
+                     if (data.events == null) $scope.loading = false;
+                     if (data.events.event instanceof Array){
                      for (var d in data.events.event) {
-
+                         console.log("event")
+                         console.log(data.events.event[d])
                          var event = data.events.event[d];
                          var scope = $scope.$new();
                          scope.event = event;
@@ -235,13 +276,23 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
                          setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
                      }
+                     } else {
+                         
+                         var event = data.events.event;
+                         var scope = $scope.$new();
+                         scope.event = event;
+                         var compiled = $compile("<div><info-box></info-box></div>")(scope);
 
-                    
+                         setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
+
+                     }
+
+
                      $scope.loading = false;
                  }).error(function (err) {
-            console.log("err");
-            console.log(err);
-        });
+                     console.log("err");
+                     console.log(err);
+                 });
 
         if (spinner == undefined) {
             spinner = angular.element("<center><img src='../img/gps.gif' ng-show='loading' id='spinner'></center>");
@@ -347,6 +398,34 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             }
         });
     }
+
+    function getApiUrl() {
+        var url = "http://api.eventful.com/json/events/search?app_key=k6C5qrCrdBgZMSkw";
+
+        if (oArgs.q != "") url += "&q=" + oArgs.q;
+
+        url += "&location=" + $scope.position.lat.toFixed(6) + "," + $scope.position.lon.toFixed(6);
+        //Within
+        url += "&within=" + parseInt(oArgs.within);
+
+        if (filterAppliedFromDate() || filterAppliedToDate()) url += "&date=" + oArgs.date;
+        else url += "&date=" + oArgs.date;
+
+        if (oArgs.category != "") url += "&category=" + oArgs.category;
+
+
+        //Size
+        url += "&page_size=" + parseInt(oArgs.page_size)
+        url += "&page_number=1"
+        url += "&include=categories"
+
+        console.log(url);
+        url += '&callback=JSON_CALLBACK';
+
+        return url;
+
+    }
+
 });
 
 
@@ -355,7 +434,7 @@ function getDateInFormat(from, to) {
 }
 
 function getMonth(d) {
-    var currentMonth = d.getMonth()+1;
+    var currentMonth = d.getMonth() + 1;
     if (currentMonth < 10) { currentMonth = '0' + currentMonth; }
     return currentMonth;
 }

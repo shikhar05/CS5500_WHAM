@@ -1,7 +1,9 @@
 ﻿
-app.controller("SidePanelCtrl", function ($rootScope, $scope, MyService) {
+app.controller("SidePanelCtrl", function ($rootScope, $scope, MyService,LoginService) {
     $scope.showSidePanel = false;
     $scope.currDate = new Date();
+
+    $scope.userProfile = null;
 
     $scope.types = ["music", "conference", "comedy",
                         "learning education", "family fun kids", "festivals parades", "movies film", "food",
@@ -16,12 +18,19 @@ app.controller("SidePanelCtrl", function ($rootScope, $scope, MyService) {
         fromDate: null,
         toDate: null,
         within: 5,
+        goingWith:null,
         errors: {}
     };
 
     $scope.init = function () {
         MyService.setFilter($scope.search);
     };
+
+    $scope.$watch(function () {
+        return LoginService.getCurrentUSerProfile();
+    }, function (response) {
+        $scope.userProfile = response;
+    }, true);
 
     $scope.toggleSidePanel = function () {
         $scope.showSidePanel = !$scope.showSidePanel;
@@ -45,6 +54,13 @@ app.controller("SidePanelCtrl", function ($rootScope, $scope, MyService) {
             delete $scope.search.errors.toDate;
         }
     };
+
+    $scope.resetFields = function () {
+        if ($scope.search.goingWith != null && $scope.search.goingWith != '') {
+        $scope.search.type = null;
+        $scope.search.keywords = null;
+    }
+}
 });
 
 function isNumeric(n) {
