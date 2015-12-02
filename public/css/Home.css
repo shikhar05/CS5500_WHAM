@@ -31,6 +31,7 @@
         border: 1px solid #4285f4;
         font-weight: bold;
         color: white;
+        min-width:50px;
         height: 30px;
         border-radius: 4px;
         position: absolute;
@@ -42,6 +43,7 @@
 
     #home .profileOptions{
         padding:5px;
+        min-width:150px;
         height:120px;
         background-color:#efecec;
         box-shadow:inherit;

@@ -64,10 +64,10 @@
         $http.post("/api/user/preference", data)
        .success(function (res) {
            currentUserProfile.preferences = res;
-           callback(res);
+           //callback(res);
        })
         .error(function (err) {
-            callback('error');
+            //callback('error');
         });
     }
 
@@ -76,10 +76,10 @@
         $http.post("/api/user/preference/delete", data)
        .success(function (res) {
            currentUserProfile.preferences = res;
-           callback(res);
+           //callback(res);
        })
         .error(function (err) {
-            callback('error');
+            //callback('error');
         });
     };
 
