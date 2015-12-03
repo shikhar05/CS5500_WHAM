@@ -21,14 +21,17 @@ module.exports = function (mongoose) {
         password: String,
         referalCode: String,
         rewardPoints: Number,
-        preferences: {}
+        preferences: {},
+        history: [],
+        ratings:[]
     }, { collection: "UserProfile" });
 
     UserProfileModel = mongoose.model("UserProfileModel", UserProfileSchema)
 
     var create = function (newUserProfile, callback) {
         newUserProfile.preferences = { "0": [], "1": [], "2": [], "3": [] }
-        console.log(newUserProfile);
+        newUserProfile.history = [];
+        newUserProfile.ratings = [];
         var newUserProfileObject = new UserProfileModel(newUserProfile);
 
         newUserProfileObject.save(function (err, savedUserProfileResponce) {
@@ -213,6 +216,101 @@ module.exports = function (mongoose) {
         })
     }
 
+    //*********************************************** Going to Event *******************************************//
+    
+    var createHistory = function (email, eventId, callback) {
+        console.log(email + " " + eventId);
+        UserProfileModel.findOne({ email: email}, function (err, user) {
+            if (user) {
+
+                if (!(user.history.indexOf(eventId) > -1)) {
+                    user.history.push(eventId);
+                }
+
+                user.save(function (err, savedUser) {
+                    if (err) {
+                        callback('error');
+                    } else {
+                        callback(savedUser.history);
+                    }
+                });
+            } else {
+                callback("error")
+            }
+        })
+    };
+
+    var deleteHistory = function (email, eventId, callback) {
+        UserProfileModel.findOne({ email: email }, function (err, user) {
+            if (user) {
+                var index = user.history.indexOf(eventId);
+
+                if (index > -1) {
+                    user.history.splice(index,1);
+                }
+
+                user.save(function (err, savedUser) {
+                    if (err) {
+                        callback('error');
+                    } else {
+                        callback(savedUser.history);
+                    }
+                });
+            } else {
+                callback("error")
+            }
+        })
+    };
+
+    //*********************************************** Rating *******************************************//
+
+    var createRating = function (email, ratingObjId, callback) {
+        UserProfileModel.findOne({ email: email }, function (err, user) {
+            if (user) {
+                console.log(!(user.ratings.indexOf(ratingObjId) > -1));
+
+                if (!(user.ratings.indexOf(ratingObjId) > -1)) {
+                    user.ratings.push(ratingObjId);
+                    console.log("pushed");
+                    console.log(user.ratings);
+                }
+
+                user.save(function (err, savedUser) {
+                    if (err) {
+                        callback('error');
+                    } else {
+                        console.log("saved");
+                        console.log(savedUser.ratings);
+                        callback(savedUser.ratings);
+                    }
+                });
+            } else {
+                callback("error")
+            }
+        });
+    };
+
+    var deleteRating = function (email, ratingObjId, callback) {
+        UserProfileModel.findOne({ email: email }, function (err, user) {
+            if (user) {
+                var index = user.history.indexOf(ratingObjId);
+
+                if (index > -1) {
+                    user.ratings.splice(index, 1);
+                }
+
+                user.save(function (err, savedUser) {
+                    if (err) {
+                        callback('error');
+                    } else {
+                        callback(savedUser.ratings);
+                    }
+                });
+            } else {
+                callback("error")
+            }
+        })
+    };
 
     return {
         create: create,
@@ -222,6 +320,10 @@ module.exports = function (mongoose) {
         updateRewardPoints: updateRewardPoints,
         updatePreference: updatePreference,
         deletePreference: deletePreference,
-        changePassword: changePassword
+        changePassword: changePassword,
+        createHistory: createHistory,
+        deleteHistory: deleteHistory,
+        createRating: createRating,
+        deleteRating: deleteRating
     }
 };

@@ -1,5 +1,6 @@
 ﻿var path = require('path');
 var DBManager = require(path.resolve("./ServerFiles/DAO/DatabaseManager.js"))();
+var VenueRating = require(path.resolve("./ServerFiles/Controller/VenueRatingCtrl.js"))();
 
 var C_rewardPoints = 50;
 
@@ -51,17 +52,12 @@ module.exports = function () {
             else {
                 user = resp;
                 if (user != null) {
-                    //var userProfile = {
-                    //    '_id':user._id,
-                    //    'firstname': user.firstname,
-                    //    'lastname': user.lastname,
-                    //    'email': user.email,
-                    //    'referalCode': user.referalCode,
-                    //    'rewardPoints': user.rewardPoints
-                    //};
-                    //return done(null, userProfile);
-
-                    return done(null, user);
+                    console.log("user table ratings")
+                    console.log(resp.ratings);
+                    VenueRating.getAllRatingsOfUser(resp.ratings, function (userRatings) {
+                        user.ratings = userRatings;
+                        return done(null, user);
+                    });
                 } else {
                     return done(null, false, { message: 'Unable to login' });
                 }

@@ -55,12 +55,12 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
     };
 
     $scope.$watch(function () {
-        return LoginService.getCurrentUSerProfile();
+        $scope.userProfile = LoginService.getCurrentUSerProfile();
+        return $scope.userProfile.preferences;
     }, function (response) {
-        $scope.userProfile = response;
+        $scope.userProfile.preferences = response;
         printOnMap(oArgs);
     }, true);
-
 
     // place a marker
     function setMarker(map, position, title, content) {

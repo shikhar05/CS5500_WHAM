@@ -23,7 +23,7 @@ module.exports = function () {
         });
     };
 
-    var changePassword = function (passwordData,callback) {
+    var changePassword = function (passwordData, callback) {
 
         var email = passwordData.email;
         var oldPass = passwordData.oldPassword
@@ -32,11 +32,23 @@ module.exports = function () {
         DBManager.changePassword(email, oldPass, newPass, function (msg) {
             callback(msg);
         });
+    };
+
+    //*********************************************** Going to Event *******************************************//
+    
+    var createHistory = function (email, eventId, callback) {
+        DBManager.createHistory(email, eventId, callback);
+    }
+
+    var deleteHistory = function (email, eventId, callback) {
+        DBManager.deleteHistory(email, eventId, callback);
     }
 
     return {
         updatePreference: updatePreference,
         deletePreference: deletePreference,
-        changePassword: changePassword
+        changePassword: changePassword,
+        createHistory: createHistory,
+        deleteHistory: deleteHistory
     }
 };

@@ -6,6 +6,8 @@ var LoginCtrl = require(path.resolve('./ServerFiles/Controller/LoginCtrl.js'))()
 
 var ProfileCtrl = require(path.resolve('./ServerFiles/Controller/ProfileCtrl.js'))();
 
+var VenueRatingCtrl = require(path.resolve('./ServerFiles/Controller/VenueRatingCtrl.js'))();
+
 module.exports = function (app, passport, LocalStrategy) {
 
     passport.use('Authentication', new LocalStrategy({
@@ -60,7 +62,6 @@ module.exports = function (app, passport, LocalStrategy) {
         delete user._id;
         delete user.password;
         res.json(user);
-
     });
 
     app.post("/logout", function (req, res) {
@@ -80,13 +81,13 @@ module.exports = function (app, passport, LocalStrategy) {
     app.post("/api/user/preference", function (req, res) {
         var email = req.body.email;
         var preference = req.body.preference;
-        ProfileCtrl.updatePreference(email,preference, function (responce) {
+        ProfileCtrl.updatePreference(email, preference, function (responce) {
             res.send(responce);
         });
     });
 
     app.post("/api/user/preference/delete", function (req, res) {
-     
+
         var email = req.body.email;
         var preference = req.body.preference;
         console.log("delete");
@@ -96,4 +97,39 @@ module.exports = function (app, passport, LocalStrategy) {
             res.send(responce);
         });
     });
+
+    //*********************************************** Going to Event *******************************************//
+
+    app.post("/api/user/history", function (req, res) {
+        var email = req.body.email;
+        var eventId = req.body.eventId;
+        console.log(email + " " + eventId);
+        ProfileCtrl.createHistory(email, eventId, function (responce) {
+            res.send(responce);
+        });
+    });
+
+    app.post("/api/user/history/delete", function (req, res) {
+        var email = req.body.email;
+        var eventId = req.body.eventId;
+        ProfileCtrl.deleteHistory(email, eventId, function (responce) {
+            res.send(responce);
+        });
+    });
+
+    //*********************************************** Rating *******************************************//
+
+    app.post("/api/venue/rate", function (req, res) {
+
+        var email = req.body.email;
+        var venueId = req.body.venueId;
+        var rating = req.body.rating;
+
+        VenueRatingCtrl.createRating(email,venueId, rating, function (responce) {
+            res.send(responce);
+        });
+
+    });
+
 };
+

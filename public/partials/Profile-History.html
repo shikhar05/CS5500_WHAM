@@ -1,47 +1,42 @@
-﻿<div class="user-info-content">
-    <div>
-        <div>Email ID</div>
-        <div class="input-group search">
-            <p class="form-control">{{user.email}}</p>
-            <span class="input-group-addon">
-                <span ng-class="{ 'glyphicon':user.verified, 'glyphicon-ok':user.verified, 'success':user.verified}" title="Your Email ID is verified.">
-                </span>
-                <span ng-class="{ 'glyphicon':!user.verified, 'glyphicon-remove':!user.verified, 'error':!user.verified}" title="Please veriy your Email ID">
+﻿<link rel="stylesheet" href="css/Profile-History.css" />
+<div class="history">
+    
+    <nav>
+        <ul>
+            <li ng-class="{active:activeSubTabIndex==0}">
+                <a href="" ng-click="openSubTab(0)"><span>Calender</span></a>
+            </li>
+            <li ng-class="{active:activeSubTabIndex==1}">
+                <a href="" ng-click="openSubTab(1)"><span>Likes / Dislikes</span></a>
+            </li>
+        </ul>
+    </nav>
 
-                </span>
-            </span>
+
+    <div ng-show="activeSubTabIndex == 0">
+        <div ng-show="loading"><center><img src='../img/squares.gif' ng-show='loading' id='spinner'></center></div>
+        <div ng-repeat="eventData in history track by $index">
+            <button class="btn-danger float-right" ng-click="deleteHistory($index)">X</button>
+            <h3>{{eventData.eventName}}</h3>
+            <div class="float-right">
+                <a href="" ng-click="rateVenue(eventData.venueId,true)">Like</a>
+                <a href="" ng-click="rateVenue(eventData.venueId,false)">Dislike</a>
+            </div>
+
+            <p>{{eventData.venueName}}</p>
+            <p>{{eventData.address}}</p>
+
+            <p>{{eventData.eventDate}}</p>
+            <hr />
         </div>
     </div>
 
-    <div>
-        <div>First Name</div>
-        <input type="text" class="form-control" ng-model="user.firstname">
-        <div class="error">{{errorFirstname}}</div>
+    <div ng-show="activeSubTabIndex == 1">
+        <div class="row" ng-repeat="r in ratings">
+            <p>r.name</p>
+            <p>r.address</p>
+            <p>r.rating</p>
+        </div>
     </div>
-    <div>
-        <div>Last Name</div>
-        <input type="text" class="form-control" ng-model="user.lastname">
-        <div class="error"> {{errorLastname}}</div>
-    </div>
-    <div>
-        <div>Phone Number</div>
-        <input type="number" class="form-control" ng-pattern="/^[0-9]{10}$/" ng-model="user.phone">
-        <div class="error">{{errorPhone}}</div>
-    </div>
-    <div>
-        <div>Security Question</div>
-        <input type="text" class="form-control" ng-model="user.secq">
-        <div class="error">{{errorSecurityquestion}}</div>
-    </div>
-    <div>
-        <div>Security Answer</div>
-        <input type="password" class="form-control" ng-model="user.seca">
-        <div class="error">{{errorSecurityanswer}}</div>
-    </div>
-    <br />
-    <div>
-        <button class="btn form-control" ng-click="updateInfo()">Update my Details</button>
-    </div>
-    <div class="success">{{userInfoSuccMsg}}</div>
-    <div class="error">{{userInfoErrorMsg}}</div>
+
 </div>

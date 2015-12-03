@@ -1,6 +1,11 @@
 ﻿
-app.controller("InfoBoxCtrl", function ($scope, $compile) {
+app.controller("InfoBoxCtrl", function ($scope, $compile,LoginService) {
 
+    $scope.$watch(function () {
+        return LoginService.getCurrentUSerProfile();
+    }, function (response) {
+        $scope.userProfile = response;
+    }, true);
 
     $scope.init = function () {
         if ($scope.event.description) {
@@ -23,5 +28,24 @@ app.controller("InfoBoxCtrl", function ($scope, $compile) {
         $scope.$parent.calculateAndDisplayRoute(address, lat, lon);
     };
 
+    //*********************************************** Going to Event *******************************************//
+
+    $scope.goingToEvent = function () {
+        LoginService.createHistory($scope.event.id, function (res) {
+            if (res == 'ok') {
+                alert("Successfully added into History");
+            };
+        });
+    };
+
+    $scope.notGoingToEvent = function () {
+        LoginService.deleteHistory($scope.event.id, function (res) {
+            if (res == 'ok') {
+                alert("Successfully deleted from History");
+            };
+        });
+    };
+
+    
 
 });

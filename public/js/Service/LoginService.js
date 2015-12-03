@@ -1,4 +1,4 @@
-﻿app.factory("LoginService", function ($http,$location) {
+﻿app.factory("LoginService", function ($http, $location) {
 
     var currentUserProfile = null;
 
@@ -55,12 +55,12 @@
           $location.url("/");
       })
        .error(function (err) {
-           
+
        });
     };
 
     var updatePreference = function (preference) {
-        var data = {'email':currentUserProfile.email,'preference':preference}
+        var data = { 'email': currentUserProfile.email, 'preference': preference }
         $http.post("/api/user/preference", data)
        .success(function (res) {
            currentUserProfile.preferences = res;
@@ -96,18 +96,102 @@
             callback(res);
         })
         .error(function (err) {
-            
+
+        })
+    };
+
+
+    //*********************************************** Going to Event *******************************************//
+
+    var createHistory = function (eventId, callback) {
+        
+        var data = {
+            email: currentUserProfile.email,
+            eventId: eventId
+        }
+        $http.post("/api/user/history", data)
+        .success(function (res) {
+            if (res == 'error') {
+                callback(res);
+            } else {
+                currentUserProfile.history = res;
+                callback('ok');
+            }
+        })
+        .error(function (err) {
+            callback(res);
+        })
+    };
+
+    var deleteHistory = function (eventId, callback) {
+        var data = {
+            email: currentUserProfile.email,
+            eventId: eventId
+        }
+        $http.post("/api/user/history/delete", data)
+        .success(function (res) {
+            if (res == 'error') {
+                callback(res);
+            } else {
+                currentUserProfile.history = res;
+                callback('ok');
+            }
+        })
+        .error(function (err) {
+            callback(res);
+        })
+    };
+
+    //*********************************************** Rating *******************************************//
+
+    var rateVenue = function (venueId, rating, callback) {
+        var data = {
+            email: currentUserProfile.email,
+            venueId: venueId,
+            rating: rating
+        };
+
+        $http.post("/api/venue/rate", data)
+        .success(function (res) {
+            if (res == 'error') {
+                callback(res);
+            } else {
+                currentUserProfile.ratings = res;
+
+            }
+        })
+        .error(function (err) {
+            callback(res);
+        })
+
+    };
+
+    var getCurrentUserRatings = function () {
+        $http.post("/api/venue/rate", data)
+        .success(function (res) {
+            if (res == 'error') {
+                callback(res);
+            } else {
+                currentUserProfile.ratings = res;
+
+            }
+        })
+        .error(function (err) {
+            callback(res);
         })
     };
 
     return {
         getCurrentUSerProfile: getCurrentUSerProfile,
         login: login,
-        logout:logout,
+        logout: logout,
         register: register,
         checkIfUserExist: checkIfUserExist,
         updatePreference: updatePreference,
         deletePreference: deletePreference,
-        changePassword: changePassword
+        changePassword: changePassword,
+        createHistory: createHistory,
+        deleteHistory: deleteHistory,
+        rateVenue: rateVenue
     }
 });
