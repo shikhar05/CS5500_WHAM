@@ -2,14 +2,20 @@
     <h4>{{event.title}}</h4>
 
     <p class="description" ng-show="event.description != 'There is no description for this event.'">{{event.description}}</p>
-    <img ng-show="event.image.url" class="float-right" src="{{event.image.url}}" width="70" height="70" />
+    <div class="float-right">
+        <p>
+            <img ng-show="event.image.url" src="{{event.image.url}}" width="70" height="70" />
+        </p>
+        <p >
+            <span>Likes: {{ratingData.like}}</span>
+            <span>Dislikes: {{ratingData.dislike}}</span>
+        </p>
+    </div>
+    
 
     <label>Address</label>
     <p>{{event["venue_name"]}}</p>
-    <p class="float-right">
-        <span>Likes: {{ratingData.like}}</span>
-        <span>Dislikes: {{ratingData.dislike}}</span>
-    </p>
+    
     <p>{{event["venue_address"]+", "+event["city_name"] + ", " + event["region_name"] + ", " + event["country_name"]}}</p>
 
 
