@@ -5,15 +5,20 @@
     <img ng-show="event.image.url" class="float-right" src="{{event.image.url}}" width="70" height="70" />
 
     <label>Address</label>
-    <p>{{event["venue_name"]}}</p><p>{{event["venue_address"]+", "+event["city_name"] + ", " + event["region_name"] + ", " + event["country_name"]}}</p>
+    <p>{{event["venue_name"]}}</p>
+    <p class="float-right">
+        <span>Likes: {{ratingData.like}}</span>
+        <span>Dislikes: {{ratingData.dislike}}</span>
+    </p>
+    <p>{{event["venue_address"]+", "+event["city_name"] + ", " + event["region_name"] + ", " + event["country_name"]}}</p>
 
 
     <!--<a href='{{event["venue_url"]}}' target="_blank"> Venue URL</a><br />-->
     <a href='{{event.url}}' target="_blank">View Details</a> |
     <a href="" ng-click="getDirections(event['venue_address'])">Get Directions</a> |
     <div class="float-right">
-        <a ng-show="userProfile && !(userProfile.history.indexOf(event.id) > -1)" href="" ng-click="goingToEvent()">Going</a>
-        <a ng-show="userProfile && (userProfile.history.indexOf(event.id) > -1)" href="" ng-click="notGoingToEvent()">Not Going</a>
+        <a ng-show="userProfile && !going" href="" ng-click="goingToEvent()">Going</a>
+        <a ng-show="userProfile && going" href="" ng-click="notGoingToEvent()">Not Going</a>
         <a></a>
     </div>
 </div>

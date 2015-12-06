@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 mongoose.connect(process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/wham');
 
 var UserProfile = require(path.resolve("./ServerFiles/DAO/UserProfileDAO.js"))(mongoose);
-var VenueRating = require(path.resolve("./ServerFiles/DAO/VenueRatingDAO.js"))(mongoose);
 
 module.exports = function () {
 
@@ -42,44 +41,36 @@ module.exports = function () {
     };
 
     //*********************************************** Going to Event *******************************************//
-    
-    var createHistory = function (email, eventId,callback) {
-        UserProfile.createHistory(email, eventId, callback);
+
+    var createHistory = function (email, data, callback) {
+        UserProfile.createHistory(email, data, callback);
     }
 
-    var deleteHistory = function (email, eventId, callback) {
-        UserProfile.deleteHistory(email, eventId, callback);
+    var deleteHistory = function (email, data, callback) {
+        UserProfile.deleteHistory(email, data, function (updatedHistory) {
+            if (updatedHistory != 'error') {
+                deleteRating(email, data.venueId, function (updatedRating) {
+                    if (updatedRating != 'error') {
+                        callback({ 'history': updatedHistory, 'ratings': updatedRating });
+                    }
+                })
+            };
+        });
     };
 
     //*********************************************** Rating *******************************************//
 
-    var createRating = function (venue_id, liked, callback) {
-        VenueRating.create(venue_id, liked, callback);
+    var createRating = function (email, data, callback) {
+        UserProfile.createRating(email, data, callback);
     };
 
-    var updateRating = function (objectID, venue_id, liked, callback) {
-        VenueRating.update(objectID, venue_id, liked, callback);
+    var deleteRating = function (email, venueId, callback) {
+        UserProfile.deleteRating(email, venueId, callback);
     };
 
-    var createRatingForUser = function (email, ratingObjId, callback) {
-        UserProfile.createRating(email, ratingObjId, callback);
-    };
-
-    var deleteRatingForUser = function (email, ratingObjId, callback) {
-        UserProfile.deleteRating(email, ratingObjId, callback);
-    };
-
-    var getRatingById = function (id, callback) {
-        VenueRating.getRatingById(id,callback);
-    };
-
-    var getAllRatings = function (callback) {
-        VenueRating.getAllRatings(callback);
-    };
-
-    var getAllRatingsByVenueObjId = function (venueid, callback) {
-        VenueRating.getAllRatingsByVenueObjId(venueid, callback);
-    };
+    var getRatingCount = function (callback) {
+        UserProfile.getRatingCount(callback);
+    }
 
     return {
         createUserProfile: createUserProfile,
@@ -92,12 +83,8 @@ module.exports = function () {
         createHistory: createHistory,
         deleteHistory: deleteHistory,
         createRating: createRating,
-        updateRating: updateRating,
-        createRatingForUser: createRatingForUser,
-        deleteRatingForUser: deleteRatingForUser,
-        getRatingById: getRatingById,
-        getAllRatings: getAllRatings,
-        getAllRatingsByVenueObjId: getAllRatingsByVenueObjId
+        deleteRating: deleteRating,
+        getRatingCount: getRatingCount
     };
 
 }

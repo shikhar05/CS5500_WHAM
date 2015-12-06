@@ -2,7 +2,7 @@
 app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $compile, $http, LoginService) {
     var map, infoWindow;
     var markers = [];
-
+    var dislikedEvents = [];
     $scope.userProfile = null;
 
     $scope.directionsTo;
@@ -29,7 +29,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         q: "",
         where: "",
         date: "",
-        page_size: 50,
+        page_size: 80,
         within: 5
     };
 
@@ -51,16 +51,55 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             else {
                 alert(msg);
             }
-        })
+        });
+
+        LoginService.getAllRatings(function (resp) {
+            if (resp != 'error') {
+                $scope.ratingData = resp;
+            }
+        });
+
+        
     };
 
     $scope.$watch(function () {
         $scope.userProfile = LoginService.getCurrentUSerProfile();
-        return $scope.userProfile.preferences;
+        if ($scope.userProfile) {
+            return $scope.userProfile.preferences;
+        }
+        return
     }, function (response) {
-        $scope.userProfile.preferences = response;
-        printOnMap(oArgs);
+        if (response) {
+            $scope.userProfile.preferences = response;
+            printOnMap(oArgs);
+        }
     }, true);
+
+    $scope.$watch(function () {
+        $scope.userProfile = LoginService.getCurrentUSerProfile();
+        if ($scope.userProfile) {
+            return $scope.userProfile.ratings;
+        }
+        return
+    }, function (response) {
+        if (response) {
+            $scope.userProfile.ratings = response;
+            buildDislikedVenues();
+        }
+    }, true);
+
+    function buildDislikedVenues() {
+        var venues = $scope.userProfile.ratings;
+        var dislikedEventsList = [];
+        for (v in venues) {
+            if (venues[v].rating == false) {
+                dislikedEventsList.push(venues[v].venueId);
+            }
+        }
+        dislikedEvents = dislikedEventsList;
+        console.log("disliked venue ids")
+        console.log(dislikedEvents);
+    };
 
     // place a marker
     function setMarker(map, position, title, content) {
@@ -185,7 +224,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
                     karray = preferences[i]["keywords"].split(" ");
                     for (var j in karray) {
                         if (keywords == "") {
-                            keywords += "description:"+karray[j];
+                            keywords += "description:" + karray[j];
                         } else {
                             keywords += "%20||%20description:" + karray[j];
                         }
@@ -212,7 +251,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             if (filterAppliedKeywords()) {
                 var k = "";
                 var karray = $scope.filter.keywords.split(" ");
-               
+
                 for (var j in karray) {
                     if (k == "") {
                         k += "description:" + karray[j];
@@ -265,26 +304,46 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
                  .success(function (data) {
                      console.log(data);
                      if (data.events == null) $scope.loading = false;
-                     if (data.events.event instanceof Array){
-                     for (var d in data.events.event) {
-                         console.log("event")
-                         console.log(data.events.event[d])
-                         var event = data.events.event[d];
-                         var scope = $scope.$new();
-                         scope.event = event;
-                         var compiled = $compile("<div><info-box></info-box></div>")(scope);
+                     if (data.events.event instanceof Array) {
+                         //Output is list
+                         for (var d in data.events.event) {
+                             console.log("event")
+                             console.log(data.events.event[d])
+                             var event = data.events.event[d];
+                             if (!userDislikedVenue(event.venue_id)) {
+                                 console.log("venue")
+                                 console.log(event.venue_id);
+                                 var scope = $scope.$new();
+                                 scope.event = event;
+                                 console.log("Rating data")
+                                 console.log($scope.ratingData);
+                                 if ($scope.ratingData && $scope.ratingData.hasOwnProperty(event.venue_id)) {
+                                     scope.ratingData = $scope.ratingData[event.venue_id];
+                                 } else {
+                                     scope.ratingData = null;
+                                 }
+                                 var compiled = $compile("<div><info-box></info-box></div>")(scope);
 
-                         setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
-                     }
+                                 setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
+                             }
+                         }
                      } else {
-                         
+                         //Output is a single event object
                          var event = data.events.event;
-                         var scope = $scope.$new();
-                         scope.event = event;
-                         var compiled = $compile("<div><info-box></info-box></div>")(scope);
+                         if (!userDislikedVenue(event.venue_id)) {
+                             console.log("venue")
+                             console.log(event.venue_id);
+                             var scope = $scope.$new();
+                             scope.event = event;
+                             if ($scope.ratingData && $scope.ratingData.hasOwnProperty(event.venue_id)) {
+                                 scope.ratingData = $scope.ratingData[event.venue_id];
+                             } else {
+                                 scope.ratingData = null;
+                             }
+                             var compiled = $compile("<div><info-box></info-box></div>")(scope);
 
-                         setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
-
+                             setMarker(map, new google.maps.LatLng(event.latitude, event.longitude), event.name, compiled[0]);
+                         }
                      }
 
 
@@ -424,7 +483,13 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
         return url;
 
-    }
+    };
+
+    function userDislikedVenue(venueId) {
+        var index = dislikedEvents.indexOf(venueId);
+        if (index > -1) return true;
+        else return false;
+    };
 
 });
 

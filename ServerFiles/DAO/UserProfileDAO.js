@@ -14,6 +14,23 @@ module.exports = function (mongoose) {
         value: mongoose.Schema.Types.Mixed
     });
 
+    var History = new mongoose.Schema({
+        eventId: String,
+        title: String,
+        venueId: String,
+        venueName: String,
+        venueAddress: String,
+        data: String
+    });
+
+
+    var Ratings = new mongoose.Schema({
+        venueId: String,
+        venueName: String,
+        venueAddress: String,
+        rating: Boolean
+    });
+
     var UserProfileSchema = new mongoose.Schema({
         firstname: String,
         lastname: String,
@@ -23,7 +40,7 @@ module.exports = function (mongoose) {
         rewardPoints: Number,
         preferences: {},
         history: [],
-        ratings:[]
+        ratings: []
     }, { collection: "UserProfile" });
 
     UserProfileModel = mongoose.model("UserProfileModel", UserProfileSchema)
@@ -84,15 +101,16 @@ module.exports = function (mongoose) {
                 //callback('error');
             }
             else {
-
-                userFound.rewardPoints += C_rewardPoints;
-                userFound.save(function (err, user) {
-                    if (err) {
-                        //callback('error');
-                    } else {
-                        //callback('ok');
-                    }
-                });
+                if (userFound) {
+                    userFound.rewardPoints += C_rewardPoints;
+                    userFound.save(function (err, user) {
+                        if (err) {
+                            //callback('error');
+                        } else {
+                            //callback('ok');
+                        }
+                    });
+                }
             }
         });
     };
@@ -217,16 +235,28 @@ module.exports = function (mongoose) {
     }
 
     //*********************************************** Going to Event *******************************************//
-    
-    var createHistory = function (email, eventId, callback) {
-        console.log(email + " " + eventId);
-        UserProfileModel.findOne({ email: email}, function (err, user) {
+
+    var createHistory = function (email, data, callback) {
+        UserProfileModel.findOne({ email: email }, function (err, user) {
             if (user) {
 
-                if (!(user.history.indexOf(eventId) > -1)) {
-                    user.history.push(eventId);
+                var found = false;
+                for (h in user.history) {
+                    if (user.history[h].eventId == data.eventId) {
+                        found = true;
+                    }
                 }
-
+                if (!found) {
+                    var newHistory = {
+                        eventId: data.eventId,
+                        title: data.title,
+                        venueId: data.venueId,
+                        venueName: data.venueName,
+                        venueAddress: data.venueAddress,
+                        date: data.date
+                    }
+                    user.history.unshift(newHistory);
+                }
                 user.save(function (err, savedUser) {
                     if (err) {
                         callback('error');
@@ -240,13 +270,20 @@ module.exports = function (mongoose) {
         })
     };
 
-    var deleteHistory = function (email, eventId, callback) {
+    var deleteHistory = function (email, data, callback) {
         UserProfileModel.findOne({ email: email }, function (err, user) {
             if (user) {
-                var index = user.history.indexOf(eventId);
+
+
+                var index = -1;
+                for (h in user.history) {
+                    if (user.history[h].eventId == data.eventId) {
+                        index = h;
+                    }
+                }
 
                 if (index > -1) {
-                    user.history.splice(index,1);
+                    user.history.splice(index, 1);
                 }
 
                 user.save(function (err, savedUser) {
@@ -264,36 +301,68 @@ module.exports = function (mongoose) {
 
     //*********************************************** Rating *******************************************//
 
-    var createRating = function (email, ratingObjId, callback) {
+
+
+    var createRating = function (email, data, callback) {
         UserProfileModel.findOne({ email: email }, function (err, user) {
             if (user) {
-                console.log(!(user.ratings.indexOf(ratingObjId) > -1));
 
-                if (!(user.ratings.indexOf(ratingObjId) > -1)) {
-                    user.ratings.push(ratingObjId);
-                    console.log("pushed");
-                    console.log(user.ratings);
+                var index = -1;
+                for (r in user.ratings) {
+                    if (user.ratings[r].venueId == data.venueId) {
+                        index = r;
+                    }
                 }
 
+                if (index > -1) {
+                    // Found existing
+                    if (user.ratings[index].rating == data.rating) {
+                        //Delete
+                        user.ratings.splice(index, 1);
+                        user.markModified('ratings');
+
+                    } else {
+                        //Update
+                        user.ratings[index].rating = data.rating;
+                        user.markModified('ratings');
+                    }
+                }
+                else {
+                    //create
+                    var newRating = {
+                        venueId: data.venueId,
+                        venueName: data.venueName,
+                        venueAddress: data.venueAddress,
+                        rating: data.rating
+                    }
+                    user.ratings.unshift(newRating);
+                    user.markModified('ratings');
+
+                }
                 user.save(function (err, savedUser) {
                     if (err) {
                         callback('error');
                     } else {
-                        console.log("saved");
-                        console.log(savedUser.ratings);
                         callback(savedUser.ratings);
                     }
                 });
             } else {
                 callback("error")
             }
-        });
+        })
     };
 
-    var deleteRating = function (email, ratingObjId, callback) {
+    var deleteRating = function (email, venueId, callback) {
         UserProfileModel.findOne({ email: email }, function (err, user) {
             if (user) {
-                var index = user.history.indexOf(ratingObjId);
+
+
+                var index = -1;
+                for (r in user.ratings) {
+                    if (user.ratings[r].venueId == venueId) {
+                        index = r;
+                    }
+                }
 
                 if (index > -1) {
                     user.ratings.splice(index, 1);
@@ -312,6 +381,53 @@ module.exports = function (mongoose) {
         })
     };
 
+    var getRatingCount = function (callback) {
+        UserProfileModel.find({}, function (err, users) {
+            console.log(err);
+            console.log(users);
+            if (err) {
+                callback("error");
+            }
+            if (users) {
+                var ratingObj = {};
+                console.log(users)
+                for (var i in users) {
+                    var ratings = users[i].ratings;
+                    for (var r in ratings) {
+                        var rate = ratings[r];
+                        var venueId = rate.venueId
+                        var rating = rate.rating
+                         
+                        if (venueId == undefined) {
+                            continue
+                        }
+
+                        if (ratingObj.hasOwnProperty(venueId)) {
+                            //Already has key, increase count
+                            if (rating == true) {
+                                ratingObj[venueId].like += 1;
+                            } else if (rating == false) {
+                                ratingObj[venueId].dislike += 1;
+                            }
+
+                        } else {
+                            //create key, initialize count
+                            ratingObj[venueId] = { 'like': null, 'dislike': null };
+                            if (rating == true) {
+                                ratingObj[venueId].like = 1;
+                            } else if (rating == false) {
+                                ratingObj[venueId].dislike = 1;
+                            }
+                        }
+
+
+                    }
+                }
+                callback(ratingObj);
+            }
+        })
+    };
+
     return {
         create: create,
         findById: findById,
@@ -324,6 +440,7 @@ module.exports = function (mongoose) {
         createHistory: createHistory,
         deleteHistory: deleteHistory,
         createRating: createRating,
-        deleteRating: deleteRating
+        deleteRating: deleteRating,
+        getRatingCount: getRatingCount
     }
 };

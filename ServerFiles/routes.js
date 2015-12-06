@@ -6,8 +6,6 @@ var LoginCtrl = require(path.resolve('./ServerFiles/Controller/LoginCtrl.js'))()
 
 var ProfileCtrl = require(path.resolve('./ServerFiles/Controller/ProfileCtrl.js'))();
 
-var VenueRatingCtrl = require(path.resolve('./ServerFiles/Controller/VenueRatingCtrl.js'))();
-
 module.exports = function (app, passport, LocalStrategy) {
 
     passport.use('Authentication', new LocalStrategy({
@@ -102,17 +100,16 @@ module.exports = function (app, passport, LocalStrategy) {
 
     app.post("/api/user/history", function (req, res) {
         var email = req.body.email;
-        var eventId = req.body.eventId;
-        console.log(email + " " + eventId);
-        ProfileCtrl.createHistory(email, eventId, function (responce) {
+        var data = req.body.data;
+        ProfileCtrl.createHistory(email, data, function (responce) {
             res.send(responce);
         });
     });
 
     app.post("/api/user/history/delete", function (req, res) {
         var email = req.body.email;
-        var eventId = req.body.eventId;
-        ProfileCtrl.deleteHistory(email, eventId, function (responce) {
+        var data = req.body.data;
+        ProfileCtrl.deleteHistory(email,data, function (responce) {
             res.send(responce);
         });
     });
@@ -122,13 +119,20 @@ module.exports = function (app, passport, LocalStrategy) {
     app.post("/api/venue/rate", function (req, res) {
 
         var email = req.body.email;
-        var venueId = req.body.venueId;
-        var rating = req.body.rating;
-
-        VenueRatingCtrl.createRating(email,venueId, rating, function (responce) {
+        var data = req.body.data;
+        
+        ProfileCtrl.createRating(email, data, function (responce) {
             res.send(responce);
         });
+    });
 
+
+    app.get("/api/venue/rate/count", function (req, res) {
+        console.log("in route");
+        ProfileCtrl.getRatingCount(function (responce) {
+            console.log(responce);
+            res.send(responce);
+        });
     });
 
 };

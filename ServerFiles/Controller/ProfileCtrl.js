@@ -4,7 +4,7 @@ var DBManager = require(path.resolve("./ServerFiles/DAO/DatabaseManager.js"))();
 module.exports = function () {
 
     var updatePreference = function (email, preference, callback) {
-        DBManager.updatePreference(email, preference,function (updatedPreferences) {
+        DBManager.updatePreference(email, preference, function (updatedPreferences) {
             if (updatedPreferences) {
                 callback(updatedPreferences);
             } else {
@@ -35,13 +35,28 @@ module.exports = function () {
     };
 
     //*********************************************** Going to Event *******************************************//
-    
-    var createHistory = function (email, eventId, callback) {
-        DBManager.createHistory(email, eventId, callback);
+
+    var createHistory = function (email, data, callback) {
+        DBManager.createHistory(email, data, callback);
     }
 
-    var deleteHistory = function (email, eventId, callback) {
-        DBManager.deleteHistory(email, eventId, callback);
+    var deleteHistory = function (email, data, callback) {
+        DBManager.deleteHistory(email, data, callback);
+    }
+
+
+    //*********************************************** Rating *******************************************//
+
+    var createRating = function (email, data, callback) {
+        DBManager.createRating(email, data, callback);
+    }
+
+    var deleteRating = function (email, venueId, callback) {
+        DBManager.deleteRating(email, venueId, callback);
+    }
+
+    var getRatingCount = function (callback) {
+        DBManager.getRatingCount(callback);
     }
 
     return {
@@ -49,6 +64,9 @@ module.exports = function () {
         deletePreference: deletePreference,
         changePassword: changePassword,
         createHistory: createHistory,
-        deleteHistory: deleteHistory
+        deleteHistory: deleteHistory,
+        createRating: createRating,
+        deleteRating: deleteRating,
+        getRatingCount: getRatingCount
     }
 };

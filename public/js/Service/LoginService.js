@@ -37,6 +37,7 @@
         $http.post("/login", user)
        .success(function (res) {
            currentUserProfile = res;
+           console.log(currentUserProfile);
            callback('ok');
        })
         .error(function (err) {
@@ -103,11 +104,18 @@
 
     //*********************************************** Going to Event *******************************************//
 
-    var createHistory = function (eventId, callback) {
-        
+    var createHistory = function (eventData, callback) {
+
         var data = {
             email: currentUserProfile.email,
-            eventId: eventId
+            data: {
+                eventId: eventData.eventId,
+                title: eventData.title,
+                venueId: eventData.venueId,
+                venueName: eventData.venueName,
+                venueAddress: eventData.venueAddress,
+                date: eventData.date
+            }
         }
         $http.post("/api/user/history", data)
         .success(function (res) {
@@ -123,17 +131,25 @@
         })
     };
 
-    var deleteHistory = function (eventId, callback) {
+    var deleteHistory = function (eventData, callback) {
         var data = {
             email: currentUserProfile.email,
-            eventId: eventId
+            data: {
+                eventId: eventData.eventId,
+                title: eventData.title,
+                venueId: eventData.venueId,
+                venueName: eventData.venueName,
+                venueAddress: eventData.venueAddress,
+                date: eventData.date
+            }
         }
         $http.post("/api/user/history/delete", data)
         .success(function (res) {
             if (res == 'error') {
                 callback(res);
             } else {
-                currentUserProfile.history = res;
+                currentUserProfile.history = res.history;
+                currentUserProfile.ratings = res.ratings;
                 callback('ok');
             }
         })
@@ -144,11 +160,16 @@
 
     //*********************************************** Rating *******************************************//
 
-    var rateVenue = function (venueId, rating, callback) {
+    var rateVenue = function (venueData, callback) {
+
         var data = {
             email: currentUserProfile.email,
-            venueId: venueId,
-            rating: rating
+            data: {
+                venueId: venueData.venueId,
+                venueName: venueData.venueName,
+                venueAddress: venueData.venueAddress,
+                rating: venueData.rating
+            }
         };
 
         $http.post("/api/venue/rate", data)
@@ -157,7 +178,7 @@
                 callback(res);
             } else {
                 currentUserProfile.ratings = res;
-
+                callback("ok");
             }
         })
         .error(function (err) {
@@ -165,20 +186,14 @@
         })
 
     };
-
-    var getCurrentUserRatings = function () {
-        $http.post("/api/venue/rate", data)
-        .success(function (res) {
-            if (res == 'error') {
-                callback(res);
-            } else {
-                currentUserProfile.ratings = res;
-
-            }
-        })
-        .error(function (err) {
-            callback(res);
-        })
+    var getAllRatings = function (callback) {
+        $http.get("/api/venue/rate/count")
+       .success(function (res) {
+           callback(res);
+       })
+       .error(function (err) {
+           callback(res);
+       })
     };
 
     return {
@@ -192,6 +207,7 @@
         changePassword: changePassword,
         createHistory: createHistory,
         deleteHistory: deleteHistory,
-        rateVenue: rateVenue
+        rateVenue: rateVenue,
+        getAllRatings: getAllRatings
     }
 });
