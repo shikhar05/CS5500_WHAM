@@ -17,7 +17,7 @@ app.directive('myMap', function () {
         template: '<div> \
                         <div id="tutorial" class="tutorial"> \
                             <div id="tutorial-welcome"> \
-                                <h1>Welcome to Whats Happening Around Me!</h1> \
+                                <h1>Welcome to What\'s Happening Around Me!</h1> \
                                 <p>(Click anywhere to close this)</p> \
                             </div> \
                             <div id="tutorial-filter" class="tutorial-box"> \
