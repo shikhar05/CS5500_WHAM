@@ -1,4 +1,6 @@
 ﻿
+
+
 app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService) {
 
     $scope.showForgotPassword = 0;
@@ -44,7 +46,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
         if (Object.keys($scope.register.errors).length == 0) {
 
             var newUSer = $scope.register;
-            if (newUSer.referal){
+            if (newUSer.referal) {
                 newUSer.referal.trim();
             }
             LoginService.register(newUSer, function (msg) {
@@ -109,6 +111,8 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
                     LoginService.forgot($scope.forgotPassword.email, function (res) {
                         if (res == 'ok') {
                             alert("Email Sent");
+                        } else {
+                            alert("Some Error occured. Please try again later! <br/> Note: Our password recovery works for only Gmail accounts.");
                         }
                     });
                 }
@@ -123,9 +127,9 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
             $scope.register.errors.first = "Please enter First Name.";
         } else if (!isAlphaNumeric($scope.register.first)) {
             $scope.register.errors.first = "First Name should only be alpha-numeric";
-        }else if (isAllNumeric($scope.register.first)) {
+        } else if (isAllNumeric($scope.register.first)) {
             $scope.register.errors.first = "First Name cannot be all numbers";
-        }else {
+        } else {
             delete $scope.register.errors.first;
         };
     };
@@ -167,7 +171,7 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
     $scope.validateRegisterPassword = function () {
         if ($scope.register.password == null || $scope.register.password == "") {
             $scope.register.errors.password = "Please choose a Password.";
-        } else if ($scope.register.password.length < 8 || $scope.register.password.length>15) {
+        } else if ($scope.register.password.length < 8 || $scope.register.password.length > 15) {
             $scope.register.errors.password = "Password must be a atlease 8 characters and atmost 15 characters";
         } else {
             if ($scope.register.confirmPassword != null || $scope.register.confirmPassword != "") {
@@ -208,6 +212,17 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
         };
     };
 
+    $scope.checkIfUserExist = function () {
+        $scope.validateRegisterEmail();
+        if ($scope.register.errors.email == undefined) {
+            LoginService.checkIfUserExist($scope.register.email, function (res) {
+                if (res == 'ok') {
+                    $scope.register.errors.email = "Email already registered with us";
+                }
+            });
+        }
+    };
+
     //******************************************* Forgot Password Validations ****************************************//
 
     $scope.validateForgotPasswordEmail = function () {
@@ -221,16 +236,20 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
         };
     };
 
-    $scope.checkIfUserExist = function () {
-        $scope.validateRegisterEmail();
-        if ($scope.register.errors.email == undefined) {
-            LoginService.checkIfUserExist($scope.register.email, function (res) {
-                if (res == 'ok') {
-                    $scope.register.errors.email = "Email already registered with us";
+
+    $scope.checkIfUserExistToSendPassword = function () {
+        delete $scope.forgotPassword.errors.email;
+        $scope.validateForgotPasswordEmail();
+
+        if ($scope.forgotPassword.errors.email == undefined) {
+            LoginService.checkIfUserExist($scope.forgotPassword.email, function (res) {
+                
+                if (res != 'ok') {
+                    $scope.forgotPassword.errors.email = "Email not registered with us";
                 }
             });
         }
-    };
+    }
 });
 
 function validateEmail(email) {

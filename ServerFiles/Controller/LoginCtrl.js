@@ -1,4 +1,5 @@
-﻿var path = require('path');
+﻿var nodemailer = require("nodemailer");
+var path = require('path');
 var DBManager = require(path.resolve("./ServerFiles/DAO/DatabaseManager.js"))();
 
 var http = require('http');
@@ -72,15 +73,40 @@ module.exports = function () {
         })
     };
 
-    var addReferalPoints = function (referalcode) {
+    var smtpTransport = nodemailer.createTransport("SMTP", {
+        service: "Gmail",
+        auth: {
+            user: "npcompete.wham@gmail.com",  //hidden content
+            pass: "msd_npcompete"  //hidden content
+        }
+    });
 
+    var forgot = function (email, callback) {
+        DBManager.findUserProfileByEmail(email, function (user) {
+            var password = user.password;
+            var mailOptions = {
+                to: email,
+                subject: "WHAM - Password Recovery",
+                text: "Hello,\
+                       You password for WHAM application is : " + password
+            };
+            smtpTransport.sendMail(mailOptions, function (error, response) {
+                if (error) {
+                    callback("error");
+                } else {
+                    callback("ok");
+                }
+            });
+
+        })
     };
 
     return {
         register: register,
         login: login,
         checkIfUserExist: checkIfUserExist,
-        logout: logout
+        logout: logout,
+        forgot: forgot
     };
 
 };

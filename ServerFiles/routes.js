@@ -1,4 +1,5 @@
-﻿var path = require('path');
+﻿
+var path = require('path');
 
 var DBManager = require(path.resolve("./ServerFiles/DAO/DatabaseManager.js"))();
 
@@ -134,6 +135,13 @@ module.exports = function (app, passport, LocalStrategy) {
             res.send(responce);
         });
     });
+
+    app.get("/api/forgot/email=:email", function (req, res) {
+        var email = req.params.email;
+        LoginCtrl.forgot(email, function (responce) {
+            res.send(responce);
+        });
+    })
 
 };
 

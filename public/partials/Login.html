@@ -143,7 +143,9 @@
                            ng-model="forgotPassword.email"
                            placeholder="Email Address"
                            ng-change="validateForgotPasswordEmail()"
-                           ng-focus="validateForgotPasswordEmail()" />
+                           ng-focus="validateforgotpasswordemail()"
+                           ng-blur="checkIfUserExistToSendPassword()" />
+                    
                     <br />
 
                     <input type="button"

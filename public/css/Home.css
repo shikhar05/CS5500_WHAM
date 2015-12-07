@@ -24,14 +24,13 @@
         height: 30px;
         border-radius: 4px;
     }
-    
+
     #home .userBtn {
-        
         background-color: #4683ea;
         border: 1px solid #4285f4;
         font-weight: bold;
         color: white;
-        min-width:50px;
+        min-width: 50px;
         height: 30px;
         border-radius: 4px;
         position: absolute;
@@ -41,35 +40,39 @@
     }
 
 
-    #home .profileOptions{
-        padding:5px;
-        min-width:150px;
-        height:120px;
-        background-color:#efecec;
-        box-shadow:inherit;
+    #home .profileOptions {
+        padding: 5px;
+        min-width: 150px;
+        height: 120px;
+        background-color: #efecec;
+        box-shadow: inherit;
         position: absolute;
         top: 40px;
         right: 0;
-        margin:8px;
-        border-radius:5px;
+        margin: 8px;
+        border-radius: 5px;
     }
 
-    #home .floatLeft{
-        float:left
+    #home .floatLeft {
+        float: left;
     }
 
 
-    #home .center{
-        text-align:center;
-    }
-    
-    #home .floatRight{
-        float:right
+    #home .center {
+        text-align: center;
     }
 
-    .directionBox{
-        position:absolute;
-        bottom:38px;
-        left:130px;
-        z-index:100;
+    #home .floatRight {
+        float: right;
     }
+
+.directionBox {
+    position: absolute;
+    bottom: 38px;
+    left: 130px;
+    z-index: 100;
+}
+
+.inital-message {
+    padding-top: 200px;
+}

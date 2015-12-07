@@ -41,6 +41,8 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
                 var position = MyService.getUserPosition();
                 $scope.position = position;
+                console.log("position");
+                console.log($scope.position)
 
                 //set oArgs location parameter
                 oArgs.where = $scope.position.lat + "," + $scope.position.lon;
@@ -59,7 +61,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             }
         });
 
-        
+
     };
 
     $scope.$watch(function () {
@@ -189,12 +191,26 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         printOnMap(oArgs);
     },
     true);
-
+    var errorMsg;
     function printOnMap(oArgs) {
         if (map === void 0) {
             //create map and center it to the scope.position's location
-            mapOptions.center = new google.maps.LatLng($scope.position.lat, $scope.position.lon);
-            map = new google.maps.Map($element[0], mapOptions);
+            if ($scope.position == undefined && !errorMsg) {
+                var html = "<center class='inital-message'>\
+                                <div >\
+                                    <h3>This Website requires your geolocation to display events near you!</h3>\
+                                    <h3>Please allow us to access your location.</h3>\
+                                </div>\
+                            </center>";
+                dismissTutorial();
+                errorMsg = angular.element(html);
+                $compile(errorMsg)($scope);
+                $element.append(errorMsg);
+            } else {
+                mapOptions.center = new google.maps.LatLng($scope.position.lat, $scope.position.lon);
+                map = new google.maps.Map($element[0], mapOptions);
+
+            }
         }
 
 
