@@ -1,6 +1,7 @@
 ﻿var path = require('path');
 var DBManager = require(path.resolve("./ServerFiles/DAO/DatabaseManager.js"))();
 
+var http = require('http');
 var C_rewardPoints = 50;
 
 module.exports = function () {

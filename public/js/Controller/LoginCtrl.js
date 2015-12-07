@@ -105,6 +105,12 @@ app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService
             LoginService.checkIfUserExist($scope.forgotPassword.email, function (res) {
                 if (res == null) {
                     $scope.forgotPassword.errors.email = "Email not registered with us";
+                } else {
+                    LoginService.forgot($scope.forgotPassword.email, function (res) {
+                        if (res == 'ok') {
+                            alert("Email Sent");
+                        }
+                    });
                 }
             });
         }

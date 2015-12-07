@@ -33,6 +33,16 @@
         });
     };
 
+    var forgot = function (email, callback) {
+        $http.get("/api/forgot/email=" + email)
+       .success(function (res) {
+           callback('ok');
+       })
+        .error(function (err) {
+            callback('error');
+        });
+    }
+
     var login = function (user, callback) {
         $http.post("/login", user)
        .success(function (res) {
@@ -208,6 +218,7 @@
         createHistory: createHistory,
         deleteHistory: deleteHistory,
         rateVenue: rateVenue,
-        getAllRatings: getAllRatings
+        getAllRatings: getAllRatings,
+        forgot: forgot
     }
 });
