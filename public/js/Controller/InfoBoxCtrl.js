@@ -88,4 +88,12 @@ app.controller("InfoBoxCtrl", function ($scope, $compile, LoginService) {
         });
     };
 
+    //*********************************************** Share Event *******************************************//
+
+    $scope.shareEvent = function () {
+        var url = $scope.event.url;
+        url = "https://www.facebook.com/sharer/sharer.php?app_id=309437425817038&sdk=joey&u=" + url + "&display=popup&ref=plugin";
+        window.open(url, 'facebookShare', 'width=500,height=300');
+    };
+
 });

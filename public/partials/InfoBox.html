@@ -22,6 +22,7 @@
     <!--<a href='{{event["venue_url"]}}' target="_blank"> Venue URL</a><br />-->
     <a href='{{event.url}}' target="_blank">View Details</a> |
     <a href="" ng-click="getDirections(event['venue_address'])">Get Directions</a> |
+    <a target="_blank" href="" ng-click="shareEvent()">Share</a> |
     <div class="float-right">
         <a ng-show="userProfile && !going" href="" ng-click="goingToEvent()">Going</a>
         <a ng-show="userProfile && going" href="" ng-click="notGoingToEvent()">Not Going</a>

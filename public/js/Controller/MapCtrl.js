@@ -360,8 +360,8 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         }
 
         if (directionsBox == undefined) {
-            var html = "<div class='directionBox'>\
-                            <input type='text' ng-model='directionsTo' disabled/> \
+            var html = "<div class='directionBox style='width:1000px'>\
+                            <input type='text' ng-model='directionsTo' disabled style='width:600px' /> \
                             <input type='button' value='X' ng-click='clearDirection()'/> \
                         </div>"
             directionsBox = angular.element(html);
