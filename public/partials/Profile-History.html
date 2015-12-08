@@ -16,7 +16,7 @@
     <div ng-show="activeSubTabIndex == 0">
         <div ng-show="loading"><center><img src='../img/squares.gif' ng-show='loading' id='spinner'></center></div>
         <div ng-repeat="eventData in history track by $index">
-            <button class="btn-danger float-right" ng-click="deleteHistory($index)">X</button>
+            <!--<button class="btn-danger float-right" ng-click="deleteHistory($index)">X</button>-->
             <h3>{{eventData.title}}</h3>
             <div class="float-right">
                 <a href="" ng-click="rateVenueOfHistory($index,true)" ng-class="{'selected':eventData.rating===true}">Like</a>

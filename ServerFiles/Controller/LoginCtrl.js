@@ -61,7 +61,7 @@ module.exports = function () {
         });
     };
 
-    var logout = function (reqUser,req,callback) {
+    var logout = function (reqUser, req, callback) {
         console.log("in logout");
         console.log(reqUser);
         DBManager.findUserProfileByEmail(reqUser.email, function (user) {
@@ -77,7 +77,7 @@ module.exports = function () {
 
                     callback(200);
                 });
-                
+
             }
             else {
                 console.log("in logout rttor");
@@ -96,22 +96,27 @@ module.exports = function () {
     });
 
     var forgot = function (email, callback) {
-        DBManager.findUserProfileByEmail(email, function (user) {
-            var password = user.password;
-            var mailOptions = {
-                to: email,
-                subject: "WHAM - Password Recovery",
-                text: "Hello,\
-                       You password for WHAM application is : " + password
-            };
-            smtpTransport.sendMail(mailOptions, function (error, response) {
-                if (error) {
-                    callback("error");
-                } else {
-                    callback("ok");
-                }
-            });
-
+        DBManager.createNewPasswordForUser(email, function (password) {
+            if (password != 'error') {
+                var password = password;
+                var mailOptions = {
+                    to: email,
+                    subject: "WHAM - Password Recovery",
+                    text: "Hello,\n\n \
+                       You new password for WHAM application is : " + password + "\nPlease change the password once you login. \
+                       \n\n \
+                        Thanks,\nWHAM Team"
+                };
+                smtpTransport.sendMail(mailOptions, function (error, response) {
+                    if (error) {
+                        callback("error");
+                    } else {
+                        callback("ok");
+                    }
+                });
+            } else {
+                callback("error");
+            }
         })
     };
 

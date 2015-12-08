@@ -71,6 +71,11 @@ module.exports = function () {
     var getRatingCount = function (callback) {
         UserProfile.getRatingCount(callback);
     }
+    //*********************************************** Forgot Password *******************************************//
+
+    var createNewPasswordForUser = function (email,callback) {
+        UserProfile.createNewPasswordForUser(email, callback);
+    }
 
     //*********************************************** clearDB *******************************************//
 
@@ -92,6 +97,7 @@ module.exports = function () {
         createRating: createRating,
         deleteRating: deleteRating,
         getRatingCount: getRatingCount,
+        createNewPasswordForUser:createNewPasswordForUser,
         clearDB: clearDB
     };
 

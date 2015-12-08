@@ -17,12 +17,13 @@
     <p>{{event["venue_address"]+", "+event["city_name"] + ", " + event["region_name"] + ", " + event["country_name"]}}</p>
 
     <a href='{{event.url}}' target="_blank">View Details</a> |
+    <span ng-show="userProfile">
+        <a ng-show="userProfile && !going" href="" ng-click="goingToEvent()">Going</a>
+        <a ng-show="userProfile && going" href="" ng-click="notGoingToEvent()">Not Going</a>
+        |
+    </span>
     <a href="" ng-click="getDirections(event['venue_address'])">Get Directions</a> |<a target="_blank" href="" ng-click="shareEventFB()" style="width:8px; height: 8px;"><img src="../img/facebook.png"></a>
     <a target="_blank" href="" ng-click="shareEventGP()" style="width:8px; height: 8px;"><img src="../img/google.png" /></a>
     <a target="_blank" href="" ng-click="shareEventLN()" style="width:8px; height: 8px;"><img src="../img/linkedIn.png"></a>
-    <div class="float-right">
-        <a ng-show="userProfile && !going" href="" ng-click="goingToEvent()">Going</a>
-        <a ng-show="userProfile && going" href="" ng-click="notGoingToEvent()">Not Going</a>
-        <a></a>
-    </div>
+    
 </div>

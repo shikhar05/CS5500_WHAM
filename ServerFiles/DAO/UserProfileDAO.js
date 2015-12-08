@@ -1,4 +1,6 @@
 ﻿var C_rewardPoints = 50;
+var bcrypt = require('bcrypt');
+var SALT_WORK_FACTOR = 10;
 
 module.exports = function (mongoose) {
 
@@ -49,15 +51,27 @@ module.exports = function (mongoose) {
         newUserProfile.preferences = { "0": [], "1": [], "2": [], "3": [] }
         newUserProfile.history = [];
         newUserProfile.ratings = [];
-        var newUserProfileObject = new UserProfileModel(newUserProfile);
 
-        newUserProfileObject.save(function (err, savedUserProfileResponce) {
-            if (err) {
-                callback("error");
-            }
-            else {
-                callback("ok");
-            }
+        bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+            if (err) callback(err);
+            // hash the password using our new salt
+            bcrypt.hash(newUserProfile.password, salt, function (err, hash) {
+                if (err) callback(err);
+                // override the cleartext password with the hashed one
+                newUserProfile.password = hash;
+
+                var newUserProfileObject = new UserProfileModel(newUserProfile);
+
+                newUserProfileObject.save(function (err, savedUserProfileResponce) {
+                    if (err) {
+                        callback("error");
+                    }
+                    else {
+                        callback("ok");
+                    }
+                });
+
+            });
         });
     };
 
@@ -76,7 +90,9 @@ module.exports = function (mongoose) {
         console.log("email in DAO");
         console.log(email);
         UserProfileModel.findOne({ email: email }, function (err, userFound) {
-            console.log(userFound);
+           
+            userFound.password
+
             if (err) {
                 callback("error");
             }
@@ -87,13 +103,21 @@ module.exports = function (mongoose) {
     };
 
     var findByEmailPassword = function (email, password, callback) {
-        UserProfileModel.findOne({ email: email, password: password }, function (err, userFound) {
+        console.log(password);
+
+        UserProfileModel.findOne({ email: email }, function (err, userFound) {
             if (err) {
                 callback("error");
             }
             else {
                 console.log(userFound);
-                callback(userFound);
+                bcrypt.compare(password, userFound.password, function (err, isMatch) {
+                    if (isMatch) {
+                        console.log(isMatch);
+                        callback(userFound);
+                    }
+                });
+                callback(userFound)
             }
         });
     };
@@ -216,17 +240,28 @@ module.exports = function (mongoose) {
         }
         return a.join(" ");
     }
+    //*********************************************** Change password *******************************************//
 
     var changePassword = function (email, oldPass, newPass, callback) {
-        UserProfileModel.findOne({ email: email, password: oldPass }, function (err, user) {
+        UserProfileModel.findOne({ email: email }, function (err, user) {
             if (user) {
-                user.password = newPass;
-
-                user.save(function (err, user) {
-                    if (err) {
-                        callback('db error');
-                    } else {
-                        callback("ok");
+                bcrypt.compare(oldPass, user.password, function (err, isMatch) {
+                    if (isMatch) {
+                        console.log(isMatch);
+                        bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+                            bcrypt.hash(newPass, salt, function (err, hash) {
+                                if (err) callback(err);
+                                // override the cleartext password with the hashed one
+                                user.password = hash;
+                                user.save(function (err, user) {
+                                    if (err) {
+                                        callback('db error');
+                                    } else {
+                                        callback("ok");
+                                    }
+                                });
+                            });
+                        });
                     }
 
                 });
@@ -400,7 +435,7 @@ module.exports = function (mongoose) {
                         var rate = ratings[r];
                         var venueId = rate.venueId
                         var rating = rate.rating
-                         
+
                         if (venueId == undefined) {
                             continue
                         }
@@ -431,28 +466,56 @@ module.exports = function (mongoose) {
         })
     };
 
-    var clearDB = function (callback) {
-        UserProfileModel.remove({}, function (err) {
-            if (!err){
-                callback("ok");
+
+    var createNewPasswordForUser = function (email, callback) {
+        UserProfileModel.findOne({ email: email }, function (err, user) {
+            if (user) {
+                bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+
+                    var newPassword = user.password.substring(0,14);
+
+                    bcrypt.hash(newPassword, salt, function (err, hash) {
+                        if (err) callback(err);
+                        // override the cleartext password with the hashed one
+                        user.password = hash;
+                        user.save(function (err, user) {
+                            if (err) {
+                                callback('error');
+                            } else {
+                                callback(newPassword);
+                            }
+                        });
+                    });
+                });
             }
-        });
+        })
     };
 
-    return {
-        create: create,
-        findById: findById,
-        findByEmail: findByEmail,
-        findByEmailPassword: findByEmailPassword,
-        updateRewardPoints: updateRewardPoints,
-        updatePreference: updatePreference,
-        deletePreference: deletePreference,
-        changePassword: changePassword,
-        createHistory: createHistory,
-        deleteHistory: deleteHistory,
-        createRating: createRating,
-        deleteRating: deleteRating,
-        getRatingCount: getRatingCount,
-        clearDB: clearDB
-    }
+
+
+var clearDB = function (callback) {
+    UserProfileModel.remove({}, function (err) {
+        if (!err) {
+            callback("ok");
+        }
+    });
+};
+
+return {
+    create: create,
+    findById: findById,
+    findByEmail: findByEmail,
+    findByEmailPassword: findByEmailPassword,
+    updateRewardPoints: updateRewardPoints,
+    updatePreference: updatePreference,
+    deletePreference: deletePreference,
+    changePassword: changePassword,
+    createHistory: createHistory,
+    deleteHistory: deleteHistory,
+    createRating: createRating,
+    deleteRating: deleteRating,
+    getRatingCount: getRatingCount,
+    createNewPasswordForUser:createNewPasswordForUser,
+    clearDB: clearDB
+}
 };
