@@ -169,7 +169,7 @@
         if ($scope.register.password == null || $scope.register.password == "") {
             $scope.register.errors.password = "Please choose a Password.";
         } else if ($scope.register.password.length < 8 || $scope.register.password.length > 15) {
-            $scope.register.errors.password = "Password must be a atlease 8 characters and atmost 15 characters";
+            $scope.register.errors.password = "Password must be a atleast 8 characters and atmost 15 characters";
         } else {
             if ($scope.register.confirmPassword != null || $scope.register.confirmPassword != "") {
                 $scope.validateRegisterConfirmPassword();
