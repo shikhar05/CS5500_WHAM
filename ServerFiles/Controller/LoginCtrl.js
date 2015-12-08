@@ -61,13 +61,27 @@ module.exports = function () {
         });
     };
 
-    var logout = function (reqUser, callback) {
-        DBManager.findUserProfileByEmail(reqUser.email, function (err, user) {
+    var logout = function (reqUser,req,callback) {
+        console.log("in logout");
+        console.log(reqUser);
+        DBManager.findUserProfileByEmail(reqUser.email, function (user) {
+            console.log("user");
+            console.log(user);
             if (user != null) {
-                req.session.destroy();
-                callback(200);
+                req.logOut();
+                console.log("in logout user");
+
+                req.session.destroy(function (err) {
+                    console.log(err);
+                    console.log("in logout destroy");
+
+                    callback(200);
+                });
+                
             }
             else {
+                console.log("in logout rttor");
+
                 callback("Error");
             }
         })

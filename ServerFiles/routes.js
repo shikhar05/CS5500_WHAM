@@ -9,7 +9,7 @@ var ProfileCtrl = require(path.resolve('./ServerFiles/Controller/ProfileCtrl.js'
 
 module.exports = function (app, passport, LocalStrategy) {
 
-    passport.use('Authentication', new LocalStrategy({
+    passport.use(new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password'
     }, function (email, password, done) {
@@ -17,11 +17,14 @@ module.exports = function (app, passport, LocalStrategy) {
     }));
 
     passport.serializeUser(function (user, done) {
-        done(null, user._id);
+        console.log("in serialize");
+        done(null, user);
     });
 
-    passport.deserializeUser(function (id, done) {
-        DBManager.findUserProfileById(id, function () {
+    passport.deserializeUser(function (user, done) {
+        console.log("in deserialize");
+        console.log(user);
+        DBManager.findUserProfileById(user._id, function (user) {
             done(null, user);
         });
     });
@@ -55,18 +58,24 @@ module.exports = function (app, passport, LocalStrategy) {
     });
 
     // Login
-    app.post("/login", passport.authenticate('Authentication'), function (req, res) {
+    app.post("/login", passport.authenticate('local'), function (req, res) {
 
         var user = req.user;
-        delete user._id;
         delete user.password;
         res.json(user);
     });
 
     app.post("/logout", function (req, res) {
-        LoginCtrl.logout(req.body, function (responce) {
+        LoginCtrl.logout(req.body,req, function (responce) {
             res.send(responce);
         });
+    });
+
+    app.get("/rest/api/loggedin", function (req, res) {
+        console.log("in api")
+        console.log(req.user);
+        console.log(req.isAuthenticated());
+        res.send(req.isAuthenticated() ? req.user : '0');
     });
 
     app.post("/api/user/password", function (req, res) {
@@ -89,9 +98,6 @@ module.exports = function (app, passport, LocalStrategy) {
 
         var email = req.body.email;
         var preference = req.body.preference;
-        console.log("delete");
-        console.log(email);
-        console.log(preference);
         ProfileCtrl.deletePreference(email, preference, function (responce) {
             res.send(responce);
         });
@@ -110,7 +116,7 @@ module.exports = function (app, passport, LocalStrategy) {
     app.post("/api/user/history/delete", function (req, res) {
         var email = req.body.email;
         var data = req.body.data;
-        ProfileCtrl.deleteHistory(email,data, function (responce) {
+        ProfileCtrl.deleteHistory(email, data, function (responce) {
             res.send(responce);
         });
     });
@@ -121,7 +127,7 @@ module.exports = function (app, passport, LocalStrategy) {
 
         var email = req.body.email;
         var data = req.body.data;
-        
+
         ProfileCtrl.createRating(email, data, function (responce) {
             res.send(responce);
         });
@@ -129,9 +135,7 @@ module.exports = function (app, passport, LocalStrategy) {
 
 
     app.get("/api/venue/rate/count", function (req, res) {
-        console.log("in route");
         ProfileCtrl.getRatingCount(function (responce) {
-            console.log(responce);
             res.send(responce);
         });
     });
@@ -140,6 +144,14 @@ module.exports = function (app, passport, LocalStrategy) {
         var email = req.params.email;
         LoginCtrl.forgot(email, function (responce) {
             res.send(responce);
+        });
+    })
+
+
+    //*********************************************** Clear DB *******************************************//
+    app.get("/admin/cleardb", function (req, res) {
+        DBManager.clearDB(function (responce) {
+            res.write(responce);
         });
     })
 

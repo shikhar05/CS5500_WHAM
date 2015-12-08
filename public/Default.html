@@ -69,6 +69,7 @@
     <script src="js/Service/Service.js"></script>
     <script src="js/Service/LoginService.js"></script>
     <script src="js/Directives/Directives.js"></script>
+    <script src="js/Controller/MainCtrl.js"></script>
     <script src="js/Controller/HomeCtrl.js"></script>
     <script src="js/Controller/MapCtrl.js"></script>
     <script src="js/Controller/SidePanelCtrl.js"></script>
@@ -86,10 +87,33 @@
 
 </head>
 
-<body ng-app="wham"  onclick="dismissTutorial()">
-    <div ng-view>
+<body ng-app="wham" ng-controller="MainCtrl" >
 
+    <div ng-show="showTutorial" id="tutorial" class="tutorial" ng-click="dismisstutorial()" ng-init="init()">
+
+        <div id="tutorial-welcome">
+
+            <h1>Welcome to What's Happening Around Me!</h1>
+            <p>(Click anywhere to close this)</p>
+        </div>
+        <div id="tutorial-filter" class="tutorial-box">
+
+            <h3>Filter & Search</h3>
+            <p>(Click here to open/close side panel)</p>
+        </div>
+        <div id="tutorial-login" class="tutorial-box">
+
+            <h3>Login</h3>
+            <p>(Click here to login to the system and to view user option after login)</p>
+        </div>
+        <div id="tutorial-route">
+
+            <div class="arrow-down"></div>
+            <h3>Route from your location</h3>
+            <p>(Click on "Get directions" to get the destination address here. Click on "X" to remove the route displayed)</p>
+        </div>
     </div>
-
+    <div ng-view>
+    </div>
 </body>
 </html>

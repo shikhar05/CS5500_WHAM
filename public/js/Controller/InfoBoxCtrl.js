@@ -1,10 +1,11 @@
 ﻿
-app.controller("InfoBoxCtrl", function ($scope, $compile, LoginService) {
+app.controller("InfoBoxCtrl", function ($scope, $compile, LoginService, $rootScope) {
 
     $scope.going = false;
 
     $scope.$watch(function () {
-        return LoginService.getCurrentUSerProfile();
+        //return LoginService.getCurrentUSerProfile();
+        return $rootScope.user;
     }, function (response) {
         $scope.userProfile = response;
     }, true);
@@ -90,10 +91,25 @@ app.controller("InfoBoxCtrl", function ($scope, $compile, LoginService) {
 
     //*********************************************** Share Event *******************************************//
 
-    $scope.shareEvent = function () {
+    $scope.shareEventFB = function () {
         var url = $scope.event.url;
         url = "https://www.facebook.com/sharer/sharer.php?app_id=309437425817038&sdk=joey&u=" + url + "&display=popup&ref=plugin";
         window.open(url, 'facebookShare', 'width=500,height=300');
+    };
+    $scope.shareEventGP = function () {
+        var url = $scope.event.url;
+        url = "https://plus.google.com/share?url=" + url;
+        window.open(url, 'google+Share', 'width=500,height=300');
+    };
+    $scope.shareEventTW = function () {
+        var url = $scope.event.url;
+        url = "https://twitter.com/share";
+        window.open(url, 'TwitterShare', 'width=500,height=300');
+    };
+    $scope.shareEventLN = function () {
+        var url = $scope.event.url;
+        url = "https://www.linkedin.com/cws/share?url=" + url + "&display=popup&ref=plugin";
+        window.open(url, 'linkedInShare', 'width=500,height=300');
     };
 
 });

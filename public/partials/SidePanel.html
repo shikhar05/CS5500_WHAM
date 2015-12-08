@@ -14,40 +14,6 @@
                 Filter & Search
             </h2>
             <br />
-
-            <!--<datalist id="event_category">
-                <option value="Music"></option>
-                <option value="Conference"></option>
-                <option value="Comedy"></option>
-                <option value="Learning Education"></option>
-                <option value="Family Fun Kids"></option>
-                <option value="Festivals Parades"></option>
-                <option value="Movies Film"></option>
-                <option value="Food"></option>
-                <option value="Fundraisers"></option>
-                <option value="Art"></option>
-                <option value="Support"></option>
-                <option value="Holiday"></option>
-                <option value="Books"></option>
-                <option value="Attractions"></option>
-                <option value="Community"></option>
-                <option value="Business"></option>
-                <option value="Singles Social"></option>
-                <option value="Schools Alumni"></option>
-                <option value="Clubs Associations"></option>
-                <option value="Outdoors Recreation"></option>
-                <option value="Performing Arts"></option>
-                <option value="Animals"></option>
-                <option value="Politics Activism"></option>
-                <option value="Sales"></option>
-                <option value="Science"></option>
-                <option value="Religion Spirituality"></option>
-                <option value="Sports"></option>
-                <option value="Technology"></option>
-                <option value="Other"></option>
-            </datalist>-->
-
-
             <div ng-show="userProfile != null">
                 <label>Going With</label>
                 <select class='form-control' ng-model='search.goingWith' ng-change="resetFields()">
@@ -59,16 +25,10 @@
                 </select>
                 <hr />
             </div>
-
             <div ng-show="search.goingWith == null || search.goingWith == ''">
                 <label>Event Category</label>
                 <span class="error">{{search.errors.type}}</span>
                 <br />
-                <!--<div class="input-group ">
-                    <div class="input-group-addon"><span class="glyphicon glyphicon-glass"></span></div>
-                    <input type="text" class="form-control" list="event_category" ng-model="search.type" placeholder="Type" aria-describedby="basic-addon1"
-                           ng-change="validate()" />
-                </div>-->
 
                 <div class="input-group ">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-glass"></span></div>
@@ -76,17 +36,14 @@
                         <option ng-repeat="type in types track by $index">{{type}}</option>
                     </select>
                 </div>
-
                 <br />
                 <label>Keywords</label>
                 <div class="input-group ">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
                     <textarea class="form-control" ng-model="search.keywords" />
                 </div>
-
                 <br />
             </div>
-
             <label>From Date</label>
             <span class="error">{{search.errors.fromDate}}</span>
             <br />
@@ -96,7 +53,6 @@
                        ng-change="validate()"
                        min="{{currDate | date:'yyyy-MM-dd'}}" />
             </div><br />
-
             <label>To Date</label>
             <span class="error">{{search.errors.toDate}}</span>
             <br />
@@ -105,7 +61,6 @@
                 <input type="date" class="form-control" ng-model="search.toDate" placeholder="To Date" aria-describedby="basic-addon1"
                        ng-change="validate()" />
             </div><br />
-
             <label>Find Events within :</label> {{search.within}} miles.
             <input min="5" max="30" step="5" type="range" class="slider" ng-model="search.within" />
         </div>
@@ -120,11 +75,6 @@
                     <td>
                         <a class="box" href="javascript:window.open('https://plus.google.com/share?url=http://wham-npcompete.rhcloud.com','Google+Share','width=500,height=300')">
                             <img src="../img/google.png" alt="Google+" title="Google+" />
-                        </a>
-                    </td>
-                    <td>
-                        <a class="box" href="javascript:window.open('https://twitter.com/share','twittershare','width=500,height=300')">
-                            <img src="../img/twitter.png">
                         </a>
                     </td>
                     <td>

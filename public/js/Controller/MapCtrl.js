@@ -41,9 +41,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
                 var position = MyService.getUserPosition();
                 $scope.position = position;
-                console.log("position");
-                console.log($scope.position)
-
+                
                 //set oArgs location parameter
                 oArgs.where = $scope.position.lat + "," + $scope.position.lon;
 
@@ -65,7 +63,8 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
     };
 
     $scope.$watch(function () {
-        $scope.userProfile = LoginService.getCurrentUSerProfile();
+        //$scope.userProfile = LoginService.getCurrentUSerProfile();
+        $scope.userProfile = $rootScope.user;
         if ($scope.userProfile) {
             return $scope.userProfile.preferences;
         }
@@ -78,7 +77,8 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
     }, true);
 
     $scope.$watch(function () {
-        $scope.userProfile = LoginService.getCurrentUSerProfile();
+        //$scope.userProfile = LoginService.getCurrentUSerProfile();
+        $scope.userProfile = $rootScope.user;
         if ($scope.userProfile) {
             return $scope.userProfile.ratings;
         }
@@ -99,8 +99,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             }
         }
         dislikedEvents = dislikedEventsList;
-        console.log("disliked venue ids")
-        console.log(dislikedEvents);
     };
 
     // place a marker
@@ -195,22 +193,9 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
     function printOnMap(oArgs) {
         if (map === void 0) {
             //create map and center it to the scope.position's location
-            if ($scope.position == undefined && !errorMsg) {
-                var html = "<center class='inital-message'>\
-                                <div >\
-                                    <h3>This Website requires your geolocation to display events near you!</h3>\
-                                    <h3>Please allow us to access your location.</h3>\
-                                </div>\
-                            </center>";
-                dismissTutorial();
-                errorMsg = angular.element(html);
-                $compile(errorMsg)($scope);
-                $element.append(errorMsg);
-            } else {
-                mapOptions.center = new google.maps.LatLng($scope.position.lat, $scope.position.lon);
-                map = new google.maps.Map($element[0], mapOptions);
-
-            }
+            mapOptions.center = new google.maps.LatLng($scope.position.lat, $scope.position.lon);
+            map = new google.maps.Map($element[0], mapOptions);
+            
         }
 
 
@@ -277,7 +262,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
                 }
 
                 oArgs.q = k;
-                console.log(oArgs.q);
             }
             if (filterAppliedWithin()) oArgs.within = $scope.filter.within;
             if (filterAppliedFromDate() && !filterAppliedToDate()) oArgs.date = getDateInFormat($scope.filter.fromDate, $scope.filter.fromDate);
@@ -296,7 +280,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             oArgs.category = oArgs.category.toLowerCase().split(' ').join('_');
         }
 
-        console.log(oArgs.category);
         //api call
 
         //query
@@ -315,24 +298,16 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
 
         var url = getApiUrl();
-        console.log(url);
         $http.jsonp(url)
                  .success(function (data) {
-                     console.log(data);
                      if (data.events == null) $scope.loading = false;
                      if (data.events.event instanceof Array) {
                          //Output is list
                          for (var d in data.events.event) {
-                             console.log("event")
-                             console.log(data.events.event[d])
                              var event = data.events.event[d];
                              if (!userDislikedVenue(event.venue_id)) {
-                                 console.log("venue")
-                                 console.log(event.venue_id);
                                  var scope = $scope.$new();
                                  scope.event = event;
-                                 console.log("Rating data")
-                                 console.log($scope.ratingData);
                                  if ($scope.ratingData && $scope.ratingData.hasOwnProperty(event.venue_id)) {
                                      scope.ratingData = $scope.ratingData[event.venue_id];
                                  } else {
@@ -347,8 +322,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
                          //Output is a single event object
                          var event = data.events.event;
                          if (!userDislikedVenue(event.venue_id)) {
-                             console.log("venue")
-                             console.log(event.venue_id);
                              var scope = $scope.$new();
                              scope.event = event;
                              if ($scope.ratingData && $scope.ratingData.hasOwnProperty(event.venue_id)) {
@@ -365,8 +338,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
                      $scope.loading = false;
                  }).error(function (err) {
-                     console.log("err");
-                     console.log(err);
                  });
 
         if (spinner == undefined) {
@@ -494,7 +465,6 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
         url += "&page_number=1"
         url += "&include=categories"
 
-        console.log(url);
         url += '&callback=JSON_CALLBACK';
 
         return url;

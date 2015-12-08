@@ -1,5 +1,5 @@
 ﻿
-app.controller("HomeCtrl", function ($scope, MyService, $location, LoginService) {
+app.controller("HomeCtrl", function ($scope, MyService, $location, LoginService, $rootScope) {
     $scope.userProfile = null;
 
     $scope.profileOptionsToggle = false;
@@ -9,7 +9,8 @@ app.controller("HomeCtrl", function ($scope, MyService, $location, LoginService)
     };
 
     $scope.$watch(function () {
-        return LoginService.getCurrentUSerProfile();
+        //return LoginService.getCurrentUSerProfile();
+        return $rootScope.user;
     }, function (response) {
         $scope.userProfile = response;
     }, true);

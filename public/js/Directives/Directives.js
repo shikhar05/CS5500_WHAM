@@ -14,28 +14,7 @@
 app.directive('myMap', function () {
     return {
         restrict: 'E',
-        template: '<div> \
-                        <div id="tutorial" class="tutorial"> \
-                            <div id="tutorial-welcome"> \
-                                <h1>Welcome to What\'s Happening Around Me!</h1> \
-                                <p>(Click anywhere to close this)</p> \
-                            </div> \
-                            <div id="tutorial-filter" class="tutorial-box"> \
-                                <h3>Filter & Search</h3> \
-                                <p>(Click here to open/close side panel)</p> \
-                            </div> \
-                            <div id="tutorial-login" class="tutorial-box"> \
-                                <h3>Login</h3> \
-                                <p>(Click here to login to the system and to view user option after login)</p> \
-                            </div> \
-                            <div id="tutorial-route"> \
-                                <div class="arrow-down"></div> \
-                                <h3>Route from your location</h3> \
-                                <p>(Click on "Get directions" to get the destination address here. Click on "X" to remove the route displayed)</p> \
-                            </div> \
-                        </div> \
-                        <div class="gmaps" ng-controller="MapCtrl" ng-init="init()"></div> \
-                    </div>',
+        template: '<div class="gmaps" ng-controller="MapCtrl" ng-init="init()"></div>',
         replace: true
     };
 });

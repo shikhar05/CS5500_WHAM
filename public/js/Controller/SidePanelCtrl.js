@@ -27,7 +27,8 @@ app.controller("SidePanelCtrl", function ($rootScope, $scope, MyService,LoginSer
     };
 
     $scope.$watch(function () {
-        return LoginService.getCurrentUSerProfile();
+        //return LoginService.getCurrentUSerProfile();
+        return $rootScope.user;
     }, function (response) {
         $scope.userProfile = response;
     }, true);

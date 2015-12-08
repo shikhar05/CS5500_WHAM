@@ -1,7 +1,4 @@
-﻿
-
-
-app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService) {
+﻿app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService,$rootScope) {
 
     $scope.showForgotPassword = 0;
 

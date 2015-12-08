@@ -73,7 +73,10 @@ module.exports = function (mongoose) {
     };
 
     var findByEmail = function (email, callback) {
+        console.log("email in DAO");
+        console.log(email);
         UserProfileModel.findOne({ email: email }, function (err, userFound) {
+            console.log(userFound);
             if (err) {
                 callback("error");
             }
@@ -428,6 +431,14 @@ module.exports = function (mongoose) {
         })
     };
 
+    var clearDB = function (callback) {
+        UserProfileModel.remove({}, function (err) {
+            if (!err){
+                callback("ok");
+            }
+        });
+    };
+
     return {
         create: create,
         findById: findById,
@@ -441,6 +452,7 @@ module.exports = function (mongoose) {
         deleteHistory: deleteHistory,
         createRating: createRating,
         deleteRating: deleteRating,
-        getRatingCount: getRatingCount
+        getRatingCount: getRatingCount,
+        clearDB: clearDB
     }
 };

@@ -72,8 +72,15 @@ module.exports = function () {
         UserProfile.getRatingCount(callback);
     }
 
+    //*********************************************** clearDB *******************************************//
+
+    var clearDB = function (callback) {
+        UserProfile.clearDB(callback);
+    };
+
     return {
         createUserProfile: createUserProfile,
+        findUserProfileById:findUserProfileById,
         findUserProfileByEmail: findUserProfileByEmail,
         findUserProfileByEmailPassword: findUserProfileByEmailPassword,
         updateRewardPoints: updateRewardPoints,
@@ -84,7 +91,8 @@ module.exports = function () {
         deleteHistory: deleteHistory,
         createRating: createRating,
         deleteRating: deleteRating,
-        getRatingCount: getRatingCount
+        getRatingCount: getRatingCount,
+        clearDB: clearDB
     };
 
 }

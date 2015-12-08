@@ -1,5 +1,5 @@
 ﻿
-app.controller("ProfileCtrl", function ($scope, LoginService, $location, $http) {
+app.controller("ProfileCtrl", function ($scope, LoginService, $location, $http, $rootScope) {
 
     $scope.types = ["music", "conference", "comedy",
                         "learning education", "family fun kids", "festivals parades", "movies film", "food",
@@ -35,19 +35,22 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location, $http) 
     }
 
     $scope.$watch(function () {
-        return LoginService.getCurrentUSerProfile();
+        //return LoginService.getCurrentUSerProfile();
+        return $rootScope.user;
     }, function (response) {
         $scope.userProfile = response;
     }, true);
 
     $scope.$watch(function () {
-        return LoginService.getCurrentUSerProfile().history;
+        //return LoginService.getCurrentUSerProfile().history;
+        return $rootScope.user.history;
     }, function (response) {
         $scope.history = response;
     }, true);
 
     $scope.$watch(function () {
-        return LoginService.getCurrentUSerProfile().ratings;
+        //return LoginService.getCurrentUSerProfile().ratings;
+        return $rootScope.user.ratings;
     }, function (response) {
         $scope.ratings = response;
         addRatingToHistory();

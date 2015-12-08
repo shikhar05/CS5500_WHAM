@@ -12,15 +12,21 @@ var session = require('express-session');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());   //for parsing application/json
 
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'this is the secret'
+}));
+
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'this is the secret',
-    resave: false,
-    saveUninitialized: false
-}));
+//app.use(session({
+//    secret: process.env.SESSION_SECRET || 'this is the secret',
+//    resave: false,
+//    saveUninitialized: false
+//}));
+
+
 
 var ipaddress = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
 var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;

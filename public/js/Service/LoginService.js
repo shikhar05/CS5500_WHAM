@@ -1,6 +1,5 @@
-﻿app.factory("LoginService", function ($http, $location) {
+﻿app.factory("LoginService", function ($http, $location, $rootScope) {
 
-    var currentUserProfile = null;
 
     var checkIfUserExist = function (email, callback) {
         $http.get("/api/user/email=" + email)
@@ -26,7 +25,7 @@
             else if (res == 'ok') {
                 $http.post("/login", newUser)
                     .success(function (res) {
-                        currentUserProfile = res;
+                        $rootScope.user = res;
                         callback('ok');
                     });
             }
@@ -46,8 +45,7 @@
     var login = function (user, callback) {
         $http.post("/login", user)
        .success(function (res) {
-           currentUserProfile = res;
-           console.log(currentUserProfile);
+           $rootScope.user = res;
            callback('ok');
        })
         .error(function (err) {
@@ -56,13 +54,15 @@
     };
 
     var getCurrentUSerProfile = function () {
-        return currentUserProfile;
+        return $rootScope.user;
     };
 
     var logout = function () {
-        $http.post("/logout", currentUserProfile)
+        console.log("in logout")
+        console.log($rootScope.user);
+        $http.post("/logout", $rootScope.user)
       .success(function (res) {
-          currentUserProfile = null;
+          delete $rootScope.user;
           $location.url("/");
       })
        .error(function (err) {
@@ -71,10 +71,10 @@
     };
 
     var updatePreference = function (preference) {
-        var data = { 'email': currentUserProfile.email, 'preference': preference }
+        var data = { 'email': $rootScope.user.email, 'preference': preference }
         $http.post("/api/user/preference", data)
        .success(function (res) {
-           currentUserProfile.preferences = res;
+           $rootScope.user.preferences = res;
            //callback(res);
        })
         .error(function (err) {
@@ -83,10 +83,10 @@
     }
 
     var deletePreference = function (preference) {
-        var data = { 'email': currentUserProfile.email, 'preference': preference }
+        var data = { 'email': $rootScope.user.email, 'preference': preference }
         $http.post("/api/user/preference/delete", data)
        .success(function (res) {
-           currentUserProfile.preferences = res;
+           $rootScope.user.preferences = res;
            //callback(res);
        })
         .error(function (err) {
@@ -97,7 +97,7 @@
     var changePassword = function (passData, callback) {
 
         var data = {
-            email: currentUserProfile.email,
+            email: $rootScope.user.email,
             oldPassword: passData.oldPassword,
             newPassword: passData.newPassword
         };
@@ -117,7 +117,7 @@
     var createHistory = function (eventData, callback) {
 
         var data = {
-            email: currentUserProfile.email,
+            email: $rootScope.user.email,
             data: {
                 eventId: eventData.eventId,
                 title: eventData.title,
@@ -132,7 +132,7 @@
             if (res == 'error') {
                 callback(res);
             } else {
-                currentUserProfile.history = res;
+                $rootScope.user.history = res;
                 callback('ok');
             }
         })
@@ -143,7 +143,7 @@
 
     var deleteHistory = function (eventData, callback) {
         var data = {
-            email: currentUserProfile.email,
+            email: $rootScope.user.email,
             data: {
                 eventId: eventData.eventId,
                 title: eventData.title,
@@ -158,8 +158,8 @@
             if (res == 'error') {
                 callback(res);
             } else {
-                currentUserProfile.history = res.history;
-                currentUserProfile.ratings = res.ratings;
+                $rootScope.user.history = res.history;
+                $rootScope.user.ratings = res.ratings;
                 callback('ok');
             }
         })
@@ -173,7 +173,7 @@
     var rateVenue = function (venueData, callback) {
 
         var data = {
-            email: currentUserProfile.email,
+            email: $rootScope.user.email,
             data: {
                 venueId: venueData.venueId,
                 venueName: venueData.venueName,
@@ -187,7 +187,7 @@
             if (res == 'error') {
                 callback(res);
             } else {
-                currentUserProfile.ratings = res;
+                $rootScope.user.ratings = res;
                 callback("ok");
             }
         })
