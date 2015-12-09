@@ -35,9 +35,12 @@
     var forgot = function (email, callback) {
         $http.get("/api/forgot/email=" + email)
        .success(function (res) {
+
+           alert(res)
            callback('ok');
        })
         .error(function (err) {
+            alert(res);
             callback('error');
         });
     }

@@ -33,6 +33,7 @@ module.exports = function (mongoose) {
         rating: Boolean
     });
 
+    // Collection Schema
     var UserProfileSchema = new mongoose.Schema({
         firstname: String,
         lastname: String,
@@ -87,10 +88,8 @@ module.exports = function (mongoose) {
     };
 
     var findByEmail = function (email, callback) {
-        console.log("email in DAO");
-        console.log(email);
         UserProfileModel.findOne({ email: email }, function (err, userFound) {
-           
+
 
             if (err) {
                 callback("error");
@@ -102,17 +101,13 @@ module.exports = function (mongoose) {
     };
 
     var findByEmailPassword = function (email, password, callback) {
-        console.log(password);
-
         UserProfileModel.findOne({ email: email }, function (err, userFound) {
             if (err) {
                 callback("error");
             }
             else {
-                console.log(userFound);
                 bcrypt.compare(password, userFound.password, function (err, isMatch) {
                     if (isMatch) {
-                        console.log(isMatch);
                         callback(userFound);
                     }
                 });
@@ -142,7 +137,6 @@ module.exports = function (mongoose) {
     };
 
     var updatePreference = function (email, preference, callback) {
-        console.log("pref start " + preference);
         UserProfileModel.findOne({ email: email }, function (err, userFound) {
             if (err) {
                 callback('error');
@@ -154,7 +148,6 @@ module.exports = function (mongoose) {
                 var keywords = preference.keywords;
 
                 updated = false;
-                console.log(index);
                 for (var i in userFound.preferences[index]) {
                     if (userFound.preferences[index][i].type == type) {
                         //userFound.preferences[index][i].keywords += " " + keywords
@@ -167,16 +160,11 @@ module.exports = function (mongoose) {
                     userFound.preferences[index].push({ 'type': type, 'keywords': keywords });
                     updated = true;
                 }
-                console.log("after update");
-                console.log(userFound.preferences);
                 if (updated) {
                     userFound.markModified('preferences');
                 }
 
                 userFound.save(function (err, user) {
-                    console.log("error");
-                    console.log(err);
-
                     if (err) {
                         callback('error');
                     } else {
@@ -194,14 +182,11 @@ module.exports = function (mongoose) {
                 callback('error');
             }
             else if (userFound) {
-                console.log("delete dao");
-                console.log(preference);
                 var index = preference.of.toString();
                 var type = preference.type;
                 var keywords = preference.keywords;
 
                 updated = false;
-                console.log(index);
                 for (var i in userFound.preferences[index]) {
                     if (userFound.preferences[index][i].type == type) {
                         userFound.preferences[index].splice(i, 1);
@@ -209,16 +194,11 @@ module.exports = function (mongoose) {
                     }
                 }
 
-                console.log("after update");
-                console.log(userFound.preferences);
                 if (updated) {
                     userFound.markModified('preferences');
                 }
 
                 userFound.save(function (err, user) {
-                    console.log("error");
-                    console.log(err);
-
                     if (err) {
                         callback('error');
                     } else {
@@ -246,7 +226,6 @@ module.exports = function (mongoose) {
             if (user) {
                 bcrypt.compare(oldPass, user.password, function (err, isMatch) {
                     if (isMatch) {
-                        console.log(isMatch);
                         bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
                             bcrypt.hash(newPass, salt, function (err, hash) {
                                 if (err) callback(err);
@@ -420,14 +399,11 @@ module.exports = function (mongoose) {
 
     var getRatingCount = function (callback) {
         UserProfileModel.find({}, function (err, users) {
-            console.log(err);
-            console.log(users);
             if (err) {
                 callback("error");
             }
             if (users) {
                 var ratingObj = {};
-                console.log(users)
                 for (var i in users) {
                     var ratings = users[i].ratings;
                     for (var r in ratings) {
@@ -471,7 +447,7 @@ module.exports = function (mongoose) {
             if (user) {
                 bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
 
-                    var newPassword = user.password.substring(0,14);
+                    var newPassword = user.password.substring(0, 14);
 
                     bcrypt.hash(newPassword, salt, function (err, hash) {
                         if (err) callback(err);
@@ -492,29 +468,29 @@ module.exports = function (mongoose) {
 
 
 
-var clearDB = function (callback) {
-    UserProfileModel.remove({}, function (err) {
-        if (!err) {
-            callback("ok");
-        }
-    });
-};
+    var clearDB = function (callback) {
+        UserProfileModel.remove({}, function (err) {
+            if (!err) {
+                callback("ok");
+            }
+        });
+    };
 
-return {
-    create: create,
-    findById: findById,
-    findByEmail: findByEmail,
-    findByEmailPassword: findByEmailPassword,
-    updateRewardPoints: updateRewardPoints,
-    updatePreference: updatePreference,
-    deletePreference: deletePreference,
-    changePassword: changePassword,
-    createHistory: createHistory,
-    deleteHistory: deleteHistory,
-    createRating: createRating,
-    deleteRating: deleteRating,
-    getRatingCount: getRatingCount,
-    createNewPasswordForUser:createNewPasswordForUser,
-    clearDB: clearDB
-}
+    return {
+        create: create,
+        findById: findById,
+        findByEmail: findByEmail,
+        findByEmailPassword: findByEmailPassword,
+        updateRewardPoints: updateRewardPoints,
+        updatePreference: updatePreference,
+        deletePreference: deletePreference,
+        changePassword: changePassword,
+        createHistory: createHistory,
+        deleteHistory: deleteHistory,
+        createRating: createRating,
+        deleteRating: deleteRating,
+        getRatingCount: getRatingCount,
+        createNewPasswordForUser: createNewPasswordForUser,
+        clearDB: clearDB
+    }
 };

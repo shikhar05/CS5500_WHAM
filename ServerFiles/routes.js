@@ -1,4 +1,5 @@
-﻿
+﻿// Roting of requests
+
 var path = require('path');
 
 var DBManager = require(path.resolve("./ServerFiles/DAO/DatabaseManager.js"))();
@@ -9,6 +10,7 @@ var ProfileCtrl = require(path.resolve('./ServerFiles/Controller/ProfileCtrl.js'
 
 module.exports = function (app, passport, LocalStrategy) {
 
+    //Sessions
     passport.use(new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password'
@@ -17,13 +19,10 @@ module.exports = function (app, passport, LocalStrategy) {
     }));
 
     passport.serializeUser(function (user, done) {
-        console.log("in serialize");
         done(null, user);
     });
 
     passport.deserializeUser(function (user, done) {
-        console.log("in deserialize");
-        console.log(user);
         DBManager.findUserProfileById(user._id, function (user) {
             done(null, user);
         });
@@ -33,12 +32,12 @@ module.exports = function (app, passport, LocalStrategy) {
         res.sendfile(path.resolve('privacyPolicy.html'));
     });
 
+    // Initial Load of page
     app.get("/", function (req, res) {
 
         var cwd = process.cwd();
         var indexFile = cwd + "/public/Default.html";
         res.sendfile(indexFile);
-        //res.sendfile(path.resolve(__dirname+'./public/Default.html'));
     });
 
     // Get User
@@ -65,19 +64,19 @@ module.exports = function (app, passport, LocalStrategy) {
         res.json(user);
     });
 
+    // Logout
     app.post("/logout", function (req, res) {
-        LoginCtrl.logout(req.body,req, function (responce) {
+        LoginCtrl.logout(req.body, req, function (responce) {
             res.send(responce);
         });
     });
 
+    // Check if Logged in
     app.get("/rest/api/loggedin", function (req, res) {
-        console.log("in api")
-        console.log(req.user);
-        console.log(req.isAuthenticated());
         res.send(req.isAuthenticated() ? req.user : '0');
     });
 
+    //Change Password
     app.post("/api/user/password", function (req, res) {
 
         ProfileCtrl.changePassword(req.body, function (responce) {
@@ -86,6 +85,9 @@ module.exports = function (app, passport, LocalStrategy) {
 
     });
 
+    //*********************************************** Preferences *******************************************//
+
+    // Updating Preferences
     app.post("/api/user/preference", function (req, res) {
         var email = req.body.email;
         var preference = req.body.preference;
@@ -94,6 +96,7 @@ module.exports = function (app, passport, LocalStrategy) {
         });
     });
 
+    // Deleting Preferences
     app.post("/api/user/preference/delete", function (req, res) {
 
         var email = req.body.email;

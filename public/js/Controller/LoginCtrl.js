@@ -1,4 +1,4 @@
-﻿app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService,$rootScope) {
+﻿app.controller("LoginCtrl", function ($scope, MyService, $location, LoginService, $rootScope) {
 
     $scope.showForgotPassword = 0;
 
@@ -240,7 +240,6 @@
 
         if ($scope.forgotPassword.errors.email == undefined) {
             LoginService.checkIfUserExist($scope.forgotPassword.email, function (res) {
-                
                 if (res != 'ok') {
                     $scope.forgotPassword.errors.email = "Email not registered with us";
                 }

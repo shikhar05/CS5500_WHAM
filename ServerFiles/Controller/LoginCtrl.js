@@ -108,6 +108,9 @@ module.exports = function () {
                         Thanks,\nWHAM Team"
                 };
                 smtpTransport.sendMail(mailOptions, function (error, response) {
+                    console.log("in send email");
+                    console.log(error);
+                    console.log(response);
                     if (error) {
                         callback("error");
                     } else {

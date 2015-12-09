@@ -46,6 +46,7 @@ app.controller("SidePanelCtrl", function ($rootScope, $scope, MyService,LoginSer
             delete $scope.search.errors.type;
         };
 
+        delete $scope.search.errors.toDate;
         if ($scope.search.toDate != '' && $scope.search.toDate != null &&
             $scope.search.fromDate != '' && $scope.search.fromDate != null) {
             if ($scope.search.toDate < $scope.search.fromDate) {
