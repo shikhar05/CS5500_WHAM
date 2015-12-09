@@ -340,8 +340,8 @@ describe('Controller: LoginCtrl', function () {
             referal: "11",
             errors: {}
         };
-        scope.registerUser();
-        expect(scope.register.errors.password).toMatch("Password must be a atlease 8 characters and atmost 15 characters");
+        scope.registerUser();        
+        expect(scope.register.errors.password).toMatch("Password must be a atleast 8 characters and atmost 15 characters");
     });
 
 
@@ -359,7 +359,7 @@ describe('Controller: LoginCtrl', function () {
             errors: {}
         };
         scope.registerUser();
-        expect(scope.register.errors.password).toMatch("Password must be a atlease 8 characters and atmost 15 characters");
+        expect(scope.register.errors.password).toMatch("Password must be a atleast 8 characters and atmost 15 characters");
     });
 
 

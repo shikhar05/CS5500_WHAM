@@ -27,7 +27,9 @@ module.exports = function (config) {
             '../bower_components/page-slide/*.js',
             '../public/js/*.js',
           '../public/js/Controller/*.js',
-          '*.js'
+          'loginTest.js',
+          'profileTest.js',
+          'sidePanelTest.js'
         ],
 
 

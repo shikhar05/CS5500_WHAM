@@ -32,12 +32,14 @@
     "express": "^3.4.8",
     "express-session": "^1.10.4",
     "grunt-mocha": "^0.4.15",
+    "mocha": "^2.3.4",
     "mongoose": "^3.8.24",
     "multer": "^0.1.8",
     "nodemailer": "~0.7.1",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
-    "should": "^7.1.1"
+    "should": "^7.1.1",
+    "supertest": "^1.1.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
