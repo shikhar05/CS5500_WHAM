@@ -41,7 +41,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
 
                 var position = MyService.getUserPosition();
                 $scope.position = position;
-                
+
                 //set oArgs location parameter
                 oArgs.where = $scope.position.lat + "," + $scope.position.lon;
 
@@ -195,7 +195,7 @@ app.controller("MapCtrl", function ($rootScope, $scope, MyService, $element, $co
             //create map and center it to the scope.position's location
             mapOptions.center = new google.maps.LatLng($scope.position.lat, $scope.position.lon);
             map = new google.maps.Map($element[0], mapOptions);
-            
+
         }
 
 

@@ -35,12 +35,9 @@
     var forgot = function (email, callback) {
         $http.get("/api/forgot/email=" + email)
        .success(function (res) {
-
-           alert(res)
            callback('ok');
        })
         .error(function (err) {
-            alert(res);
             callback('error');
         });
     }
@@ -61,8 +58,6 @@
     };
 
     var logout = function () {
-        console.log("in logout")
-        console.log($rootScope.user);
         $http.post("/logout", $rootScope.user)
       .success(function (res) {
           delete $rootScope.user;

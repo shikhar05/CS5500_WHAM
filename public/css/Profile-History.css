@@ -11,17 +11,17 @@
         float: right;
     }
 
-    #profile .history .selected{
-        background-color:blue;
-        color:white;
-        padding:3px;
-        border-radius:4px;
+    #profile .history .selected {
+        background-color: blue;
+        color: white;
+        padding: 3px;
+        border-radius: 4px;
     }
 
 
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:700);
 
-#profile .history nav  {
+#profile .history nav {
     background: #f96e5b;
 }
 

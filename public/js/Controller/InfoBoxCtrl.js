@@ -42,6 +42,11 @@ app.controller("InfoBoxCtrl", function ($scope, $compile, LoginService, $rootSco
     $scope.getDirections = function (address) {
 
         var event = $scope.event;
+
+        if (address == null) {
+            address = "";
+        }
+
         address += ", " + event["city_name"] + ", " + event["region_name"] + ", " + event["country_name"];
         var lat = event.latitude;
         var lon = event.longitude;

@@ -1,6 +1,5 @@
 ﻿<link rel="stylesheet" href="css/Profile-UserInfo.css" />
 <div class="userInfo">
-
     <nav>
         <ul>
             <li ng-class="{active:activeSubTabIndex==0}">
@@ -11,21 +10,17 @@
             </li>
         </ul>
     </nav>
-
     <div>
         <br />
         <!-- ****************************************************Basic Information********************************* -->
         <div ng-show="activeSubTabIndex == 0">
-
             <p>
                 Name: {{userProfile.firstname}} {{userProfile.lastname}}
                 <span class="floatRight">Points: {{userProfile.rewardPoints}}</span>
             </p>
             <p>Email: {{userProfile.email}}</p>
             <p>Your Referal code: {{userProfile.referalCode}}</p>
-
         </div>
-
 
         <!-- ****************************************************Change Password********************************* -->
         <div ng-show="activeSubTabIndex == 1">
@@ -38,7 +33,6 @@
                    ng-change="validateOldPassword()"
                    ng-focus="validateOldPassword()" />
             <br />
-
             <label>New Password</label>
             <span class="error">{{editPassword.errors.newPassword}}</span>
             <input type="password"
@@ -48,7 +42,6 @@
                    ng-change="validateNewPassword()"
                    ng-focus="validateNewPassword()" />
             <br />
-
             <label>Confirm Password</label>
             <span class="error">{{editPassword.errors.confirmPassword}}</span>
             <input type="password"
@@ -58,7 +51,6 @@
                    ng-change="validateNewConfirmPassword()"
                    ng-focus="validateNewConfirmPassword()" />
             <br />
-
             <input type="button"
                    class="btn btn-default btn-primary"
                    value="Save"
@@ -66,5 +58,4 @@
             <br />
         </div>
     </div>
-
 </div>

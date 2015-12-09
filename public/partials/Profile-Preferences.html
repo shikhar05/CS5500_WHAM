@@ -1,5 +1,4 @@
 ﻿<link rel="stylesheet" href="css/Profile-Preferences.css" />
-
 <nav class="preferences">
     <ul>
         <li ng-class="{active:activeSubTabIndex==0}">
@@ -19,10 +18,8 @@
 <br />
 <div class="preferences-body">
     <div class="row new">
-
         <label>Event Category</label>
         <span class="error pull-right">{{newPreference.errors.type}}</span>
-        <!--<input type="text" class="form-control" ng-model="newPreference.type" />-->
 
         <div class="input-group ">
             <div class="input-group-addon"><span class="glyphicon glyphicon-glass"></span></div>
@@ -30,15 +27,12 @@
                 <option ng-repeat="type in types track by $index">{{type}}</option>
             </select>
         </div>
-
         <br />
-
         <label>Keywords</label><br />
         <div class="input-group ">
             <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
             <textarea class="form-control" ng-model="newPreference.keywords" />
         </div>
-
         <br />
         <div class="col-xs-6">
             <button class="form-control btn btn-success " ng-click="addPreference()">
@@ -53,7 +47,6 @@
     </div>
     <br />
     <div class="row saved">
-
         <div class="preference-value" ng-repeat="pref in userProfile.preferences[activeSubTabIndex] track by $index">
             <label>Type</label>
             <button class="pull-right btn btn-success" ng-click="updatePreference($index)">

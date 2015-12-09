@@ -62,25 +62,17 @@ module.exports = function () {
     };
 
     var logout = function (reqUser, req, callback) {
-        console.log("in logout");
-        console.log(reqUser);
         DBManager.findUserProfileByEmail(reqUser.email, function (user) {
-            console.log("user");
-            console.log(user);
             if (user != null) {
                 req.logOut();
-                console.log("in logout user");
 
                 req.session.destroy(function (err) {
-                    console.log(err);
-                    console.log("in logout destroy");
 
                     callback(200);
                 });
 
             }
             else {
-                console.log("in logout rttor");
 
                 callback("Error");
             }
@@ -108,9 +100,6 @@ module.exports = function () {
                         Thanks,\nWHAM Team"
                 };
                 smtpTransport.sendMail(mailOptions, function (error, response) {
-                    console.log("in send email");
-                    console.log(error);
-                    console.log(response);
                     if (error) {
                         callback("error");
                     } else {

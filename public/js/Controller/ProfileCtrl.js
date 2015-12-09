@@ -197,7 +197,6 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location, $http, 
                 keywords: pref.keywords,
                 errors: {}
             }
-            console.log(deletePref);
             LoginService.deletePreference(deletePref);
             $scope.newPreference = {
                 of: $scope.activeSubTabIndex,
@@ -224,9 +223,6 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location, $http, 
         var event = $scope.history[index];
         LoginService.deleteHistory(event, function (res) {
             if (res == 'ok') {
-                //$scope.history.splice(index, 1);
-                //alert("Successfully deleted from History");
-                //console.log($scope.history)
             };
         });
     };
@@ -268,9 +264,7 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location, $http, 
         }
 
         LoginService.rateVenue(venueData, function (resp) {
-            console.log(resp);
             if (resp == 'ok') {
-                //alert("Successfully rated the Venue");
             };
         });
     };
@@ -286,7 +280,6 @@ app.controller("ProfileCtrl", function ($scope, LoginService, $location, $http, 
         }
 
         LoginService.rateVenue(newVenueData, function (resp) {
-            console.log(resp);
             if (resp == 'ok') {
                 //alert("Successfully rated the Venue");
             };

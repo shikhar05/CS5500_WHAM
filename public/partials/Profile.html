@@ -1,6 +1,5 @@
 ﻿<div id="profile" ng-init="init()">
     <nav class="top-navigation">
-
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="" ng-click="goToHome()">
@@ -8,7 +7,6 @@
                 </a>
             </div>
         </div>
-
         <div ng-show="userProfile != null">
             <button ng-class="{'userBtn':userProfile != null}"
                     ng-click="setProfileOptionsToggle()">
@@ -19,20 +17,16 @@
                  ng-show="userProfile != null && profileOptionsToggle">
                 <p class="center">{{userProfile.email}}</p>
                 <hr />
-
                 <button type="button"
                         class="floatRight btn btn-default"
-                        ng-click="logout()" >
+                        ng-click="logout()">
                     Logout
-                    </button>
+                </button>
             </div>
         </div>
     </nav>
 
-
-    <div >
-
-     
+    <div>
 
         <div id="profile-container" class="container">
             <div class="col-sm-3 options">
@@ -57,24 +51,19 @@
                         </ul>
                     </div>
                 </div>
-
             </div>
-
             <div class="col-sm-9 content">
                 <div ng-show="activeTabIndex == 0">
                     <div ng-include="'/partials/Profile-UserInfo.html'"></div>
                 </div>
-
                 <div ng-show="activeTabIndex == 1">
                     <div ng-include="'/partials/Profile-History.html'"></div>
                 </div>
-
                 <div ng-show="activeTabIndex == 2">
                     <div ng-include="'/partials/Profile-Preferences.html'"></div>
                 </div>
             </div>
         </div>
     </div>
-
 
 </div>
