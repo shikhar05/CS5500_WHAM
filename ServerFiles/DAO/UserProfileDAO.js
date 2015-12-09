@@ -91,7 +91,6 @@ module.exports = function (mongoose) {
         console.log(email);
         UserProfileModel.findOne({ email: email }, function (err, userFound) {
            
-            userFound.password
 
             if (err) {
                 callback("error");
